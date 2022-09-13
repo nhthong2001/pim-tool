@@ -1,12 +1,11 @@
 package vn.elca.training.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.*;
 import vn.elca.training.model.dto.ProjectDto;
+import vn.elca.training.model.entity.Project;
 import vn.elca.training.service.ProjectService;
-import vn.elca.training.util.ApplicationMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,13 +19,36 @@ import java.util.stream.Collectors;
 public class ProjectController extends AbstractApplicationController {
 
     @Autowired
+    @Qualifier("projectServiceImpl")
     private ProjectService projectService;
 
-    @GetMapping("/search")
-    public List<ProjectDto> search() {
+    @GetMapping
+    public List<ProjectDto> getAll() {
         return projectService.findAll()
                 .stream()
                 .map(mapper::projectToProjectDto)
                 .collect(Collectors.toList());
     }
+    @GetMapping("/search")
+    public List<ProjectDto> search(@RequestBody String keyword) {
+        return projectService.findByKeyword(keyword)
+                .stream()
+                .map(mapper::projectToProjectDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public ProjectDto getById(@PathVariable("id") Long id) {
+        return mapper.projectToProjectDto(projectService.findById(id).get());
+    }
+
+    @PostMapping
+    public String addNew(@RequestBody ProjectDto projectDto) {
+
+        projectService.update(projectDto);
+
+
+        return "Successful to update Project";
+    }
+
 }

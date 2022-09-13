@@ -22,11 +22,13 @@ public class ApplicationMapper {
     public ProjectDto projectToProjectDto(Project entity) {
         ProjectDto dto = new ProjectDto();
         dto.setId(entity.getId());
+        dto.setCustomer(entity.getCustomer());
         dto.setName(entity.getName());
         dto.setFinishingDate(entity.getFinishingDate());
 
         return dto;
     }
+
 
     public TaskDto taskToTaskDto(Task task) {
         TaskDto dto = new TaskDto();

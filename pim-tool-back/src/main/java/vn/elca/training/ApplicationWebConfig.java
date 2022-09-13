@@ -38,4 +38,5 @@ public class ApplicationWebConfig extends SpringBootServletInitializer {
         registrationBean.addUrlMappings("/h2console/*");
         return registrationBean;
     }
+
 }

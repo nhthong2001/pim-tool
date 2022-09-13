@@ -1,5 +1,8 @@
 package vn.elca.training.model.entity;
 
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,6 +27,7 @@ public class Project {
     private String name;
 
     @Column
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate finishingDate;
 
     @Column

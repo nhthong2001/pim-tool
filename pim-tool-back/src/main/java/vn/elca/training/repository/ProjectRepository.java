@@ -6,10 +6,15 @@ import org.springframework.stereotype.Repository;
 
 import vn.elca.training.model.entity.Project;
 
+import java.util.List;
+
 /**
  * @author vlp
  *
  */
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long>, QuerydslPredicateExecutor<Project> {
+    public List<Project> findByKeyword(String keyword);
+
+    Project update(Project project);
 }
