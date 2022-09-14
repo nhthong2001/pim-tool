@@ -46,7 +46,7 @@ public class ProjectServiceImpl implements ProjectService {
     public Project update(ProjectDto projectDto) {
         Project project = this.findById(projectDto.getId()).get();
         if (project == null){
-            return project;
+            return null;
         }
         project.setName(projectDto.getName());
         project.setCustomer(projectDto.getCustomer());
