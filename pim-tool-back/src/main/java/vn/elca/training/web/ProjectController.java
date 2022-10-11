@@ -2,13 +2,13 @@ package vn.elca.training.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.model.entity.Project;
-import vn.elca.training.model.exception.ProjectNotFoundException;
+import vn.elca.training.model.exception.NotFoundException;
 import vn.elca.training.service.ProjectService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,13 +23,6 @@ public class ProjectController extends AbstractApplicationController {
     @Autowired
     @Qualifier("projectServiceImpl")
     private ProjectService projectService;
-    @Autowired
-    @Qualifier("firstDummyProjectServiceImpl")
-    private ProjectService firstDummyProjectService;
-
-    @Autowired
-    @Qualifier("secondDummyProjectServiceImpl")
-    private ProjectService secondDummyProjectService;
 
     @GetMapping
     public List<ProjectDto> getAll() {
@@ -39,28 +32,21 @@ public class ProjectController extends AbstractApplicationController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/search")
-    public List<ProjectDto> search(@RequestBody String keyword) {
+    @GetMapping("/search/{keyword}")
+    public List<ProjectDto> search(@PathVariable String keyword) {
         return projectService.findByKeyword(keyword)
                 .stream()
                 .map(mapper::projectToProjectDto)
                 .collect(Collectors.toList());
     }
 
-    @ExceptionHandler(ProjectNotFoundException.class)
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    public Error projectNotFound(ProjectNotFoundException e) {
-        long projectId = e.getProjectId();
-
-        return new Error("Project [" + projectId + "] not found");
-    }
 
     @GetMapping("/{id}")
     public ProjectDto getById(@PathVariable("id") Long id) {
-        Optional<Project> project = firstDummyProjectService.findById(id);
+        Optional<Project> project = projectService.findById(id);
 
         if (project.isEmpty()) {
-            throw new ProjectNotFoundException(id);
+            throw new NotFoundException("Can't find project with id = " + id);
         }
 
         return mapper.projectToProjectDto(project.get());
@@ -68,15 +54,23 @@ public class ProjectController extends AbstractApplicationController {
 
 
     @PostMapping
-    public String addNew(@RequestBody ProjectDto projectDto) {
+    public String update(@RequestBody @Valid ProjectDto projectDto) {
+        Project project = projectService.update(projectDto);
 
-        Project project = secondDummyProjectService.update(projectDto);
         if (project == null) {
-            throw new ProjectNotFoundException(projectDto.getId());
+            throw new NotFoundException("Can't update project with id = " + projectDto.getId());
         }
 
 
         return "Successful to update Project [" + projectDto.getId() + "]";
     }
 
+    @PostMapping("/maintain/{id}")
+    public String maintenance(@PathVariable Long id) {
+        Project project = projectService.maintain(id);
+
+
+
+        return "Successful to update Project [" + id + "]";
+    }
 }

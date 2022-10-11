@@ -9,8 +9,14 @@ import vn.elca.training.model.entity.Project;
 import vn.elca.training.repository.ProjectRepository;
 import vn.elca.training.service.ProjectService;
 
+import javax.transaction.Transactional;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author vlp
@@ -18,9 +24,13 @@ import java.util.Optional;
  */
 @Service
 @Profile("!dummy | dev")
+
 public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private Validator validator;
 
     @Override
     public List<Project> findAll() {
@@ -34,7 +44,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<Project> findByKeyword(String keyword) {
-        return projectRepository.findByKeyword(keyword);
+        return projectRepository.findByNameContains(keyword);
+    }
+
+    @Override
+    public Optional<Project> findByName(String name) {
+        return projectRepository.findByName(name);
     }
 
     @Override
@@ -44,14 +59,31 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project update(ProjectDto projectDto) {
-        Project project = this.findById(projectDto.getId()).get();
-        if (project == null){
-            return null;
-        }
-        project.setName(projectDto.getName());
-        project.setCustomer(projectDto.getCustomer());
-        project.setFinishingDate(projectDto.getFinishingDate());
+        Set<ConstraintViolation<ProjectDto>> violations = validator.validate(projectDto);
 
-        return projectRepository.update(project);
+        if (!violations.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (ConstraintViolation<ProjectDto> constraintViolation : violations) {
+                sb.append(constraintViolation.getMessage());
+            }
+            throw new ConstraintViolationException("Error occurred: " + sb.toString(), violations);
+        }
+
+        return projectRepository.findById(projectDto.getId()).map(projectUpdate -> {
+            projectUpdate.setName(projectDto.getName());
+            projectUpdate.setCustomer(projectDto.getCustomer());
+            projectUpdate.setFinishingDate(projectDto.getFinishingDate());
+            return projectRepository.save(projectUpdate);
+        }).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public Project maintain(Long id) {
+        return projectRepository.findById(id).map(project -> {
+            project.setName(project.getName()+"Maint." + LocalDate.now().getYear());
+            projectRepository.save(project);
+            return project;
+        }).orElse(null);
     }
 }

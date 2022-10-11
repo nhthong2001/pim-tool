@@ -14,7 +14,6 @@ import java.util.List;
 
 /**
  * @author gtn
- *
  */
 @Service
 @Transactional
@@ -37,14 +36,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findOne(String usename) {
-        return userRepository.findUserByUsername(usename);
+    public User findOne(String username) {
+        return userRepository.findUserByUsername(username);
     }
 
     @Override
     public User addTasksToUser(List<Long> taskIds, String username) {
         List<Task> tasks = taskRepository.findAllById(taskIds);
-        User user = findOne(username);
+        User user =  userRepository.findUserByUsername(username);
+
+        tasks.forEach(task -> task.setUser(user));
+
         user.setTasks(tasks);
 
         return user;

@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import vn.elca.training.model.entity.Project;
 import vn.elca.training.model.entity.Task;
@@ -38,13 +39,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author vlp
  *
  */
 @Service
-@Transactional
+@Transactional(rollbackFor = DeadlineAfterFinishingDateException.class)
 public class TaskServiceImpl implements TaskService {
 	private Log logger = LogFactory.getLog(getClass());
 	private static final int FETCH_LIMIT = 10;
@@ -82,10 +84,12 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public List<Task> listTasksById(List<Long> ids) {
-		List<Task> tasks = new ArrayList<>(ids.size());
-		for (Long id : ids) {
-			tasks.add(getTaskById(id));
-		}
+//		List<Task> tasks = new ArrayList<>(ids.size());
+//		for (Long id : ids) {
+//			tasks.add(getTaskById(id));
+//		}
+		List<Task> tasks = taskRepository.findAllById(ids);;
+
 		return tasks;
 	}
 

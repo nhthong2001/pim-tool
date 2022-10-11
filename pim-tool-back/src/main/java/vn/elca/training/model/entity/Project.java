@@ -3,21 +3,17 @@ package vn.elca.training.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
  * @author vlp
  */
 @Entity
+@Table(name = "project")
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +32,29 @@ public class Project {
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private Set<Task> tasks = new HashSet<>();
 
-    public Project() {
+    @ManyToMany(
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            }
+    )
+    @JoinTable(name = "project_employee",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id")
+    )
+    private Set<Employee> employees = new HashSet<>();
+
+    @ManyToOne(
+            cascade = CascadeType.PERSIST, // testSaveOne projectRepository
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(name = "group_id")
+    private Group group;
+
+
+
+    public Project(String name) {
+        this.name = name;
     }
 
     public Project(String name, LocalDate finishingDate) {
@@ -49,6 +67,11 @@ public class Project {
         this.name = name;
         this.finishingDate = finishingDate;
     }
+
+    public Project() {
+
+    }
+
 
     public Long getId() {
         return id;
@@ -88,5 +111,49 @@ public class Project {
 
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public void addEmployee(Employee employee){
+        employees.add(employee);
+        employee.getProjects().add(this);
+    }
+
+    public void removeEmployee(Employee employee){
+        employees.remove(employee);
+        employee.getProjects().remove(this);
+    }
+
+    public Set<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public void addGroup(Group group) {
+        this.group = group;
+        group.getProjects().add(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return Objects.equals(id, project.id) && Objects.equals(name, project.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }
