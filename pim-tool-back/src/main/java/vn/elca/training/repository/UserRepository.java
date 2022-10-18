@@ -14,4 +14,5 @@ import vn.elca.training.model.entity.User;
 public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredicateExecutor<User> {
     @EntityGraph(attributePaths = {"tasks", "tasks.project"})
     User findUserByUsername(String username);
+
 }

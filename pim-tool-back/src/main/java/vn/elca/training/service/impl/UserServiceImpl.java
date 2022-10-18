@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElse(null);
         if (user != null) {
             Hibernate.initialize(user.getTasks());
+            user = this.findOne(user.getUsername());
         }
         // Should throw exception if not found
 

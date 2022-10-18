@@ -1,7 +1,6 @@
 package vn.elca.training.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import vn.elca.training.model.dto.ProjectDto;
@@ -20,7 +19,6 @@ import java.util.Set;
 
 /**
  * @author vlp
- *
  */
 @Service
 @Profile("!dummy | dev")
@@ -81,8 +79,12 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public Project maintain(Long id) {
         return projectRepository.findById(id).map(project -> {
-            project.setName(project.getName()+"Maint." + LocalDate.now().getYear());
+            project.setActivated(false);
             projectRepository.save(project);
+
+            String newPjName = project.getName() + "Maint." + LocalDate.now().getYear();
+            Project maintainPj = new Project(newPjName);
+            projectRepository.save(maintainPj);
             return project;
         }).orElse(null);
     }

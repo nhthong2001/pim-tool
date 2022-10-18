@@ -19,10 +19,7 @@ public class Employee {
     @ManyToMany(mappedBy = "employees")
     private Set<Project> projects = new HashSet<>();
 
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "employee_role",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
@@ -30,10 +27,12 @@ public class Employee {
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "groupLeader",
-            cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private Set<Group> groupsLead = new HashSet<>();
+
+    @Column(name = "version")
+    private Long version;
 
     public Employee() {
     }

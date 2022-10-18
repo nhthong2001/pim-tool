@@ -69,8 +69,6 @@ public class ProjectController extends AbstractApplicationController {
     public String maintenance(@PathVariable Long id) {
         Project project = projectService.maintain(id);
 
-
-
         return "Successful to update Project [" + id + "]";
     }
 }

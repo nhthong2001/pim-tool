@@ -24,20 +24,24 @@ public class Project {
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate startDate;
+
+    @Column
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate finishingDate;
 
     @Column
     private String customer;
 
+    @Column
+    private boolean activated = true;
+
+    @Column(name = "version")
+    private Long version;
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private Set<Task> tasks = new HashSet<>();
 
-    @ManyToMany(
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            }
-    )
+    @ManyToMany
     @JoinTable(name = "project_employee",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "employee_id")
@@ -50,6 +54,7 @@ public class Project {
     )
     @JoinColumn(name = "group_id")
     private Group group;
+
 
 
 
@@ -142,6 +147,14 @@ public class Project {
     public void addGroup(Group group) {
         this.group = group;
         group.getProjects().add(this);
+    }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
     }
 
     @Override

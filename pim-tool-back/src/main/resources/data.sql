@@ -1,10 +1,10 @@
-INSERT INTO PROJECT (NAME, FINISHING_DATE)
-VALUES ('EFV', '2020-04-20'),
-       ('CXTRANET', '2020-04-25'),
-       ('CRYSTAL BALL', '2020-04-28'),
-       ('IOC CLIENT EXTRANET', '2020-06-07'),
-       ('TRADEECO', '2020-06-08'),
-       ('KSTA MIGRATION', '2020-06-08');
+INSERT INTO PROJECT (NAME, FINISHING_DATE, activated)
+VALUES ('EFV', '2020-04-20', true),
+       ('CXTRANET', '2020-04-25', true),
+       ('CRYSTAL BALL', '2020-04-28', true),
+       ('IOC CLIENT EXTRANET', '2020-06-07', true),
+       ('TRADEECO', '2020-06-08', true),
+       ('KSTA MIGRATION', '2020-06-08', true);
 
 
 -- INSERT INTO EMPLOYEE (VISA, ROLE)

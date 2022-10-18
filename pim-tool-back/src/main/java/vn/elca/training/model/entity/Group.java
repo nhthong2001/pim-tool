@@ -14,18 +14,17 @@ public class Group {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(
-            cascade = CascadeType.PERSIST,
-            fetch = FetchType.LAZY
-    )
+    @ManyToOne
     @JoinColumn(name = "leader_id")
     private Employee groupLeader;
     @OneToMany(
             mappedBy = "group",
-            cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private Set<Project> projects = new HashSet<>();
+
+    @Column(name = "version")
+    private Long version;
 
     public Group() {
     }
