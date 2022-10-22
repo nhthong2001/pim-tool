@@ -1,0 +1,17 @@
+:host {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-items: self-start;
+
+}
+
+.container-fluid {
+  flex: 1;
+  align-content: stretch;
+  padding: 0px !important;
+}
+
+.sidebar {
+  flex: 1;
+}
