@@ -20,6 +20,7 @@ public class ProjectDto {
     private Long id;
 
     private Integer projectNumber;
+
     @NotBlank(message = "Name must not be blank")
     private String projectName;
 
@@ -37,6 +38,8 @@ public class ProjectDto {
     private LocalDate startDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate endDate;
+
+    private  Long version;
 
 
 }

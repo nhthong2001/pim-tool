@@ -8,4 +8,5 @@ import vn.elca.training.repository.custom.GroupRepositoryCustom;
 
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long>, QuerydslPredicateExecutor<Group>, GroupRepositoryCustom {
+    Group findByGroupLeader_Visa(String leaderVisa);
 }

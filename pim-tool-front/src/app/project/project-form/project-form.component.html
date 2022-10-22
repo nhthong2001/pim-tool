@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-10">
-    <h2>New Project</h2>
+    <h2>{{ state }}</h2>
     <hr>
     <div class="container">
       <form (ngSubmit)="onSubmit()" [formGroup]="projectForm">
@@ -59,7 +59,7 @@
               id="group"
               formControlName="group"
               name="group">
-              <option *ngFor="let g of groups" [ngValue]="g">{{ g }}</option>
+              <option *ngFor="let g of groups" [ngValue]="g.leader_visa">{{ g.leader_visa }}</option>
             </select>
           </div>
         </div>

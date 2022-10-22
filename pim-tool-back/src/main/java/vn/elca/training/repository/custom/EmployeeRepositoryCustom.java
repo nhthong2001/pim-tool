@@ -1,6 +1,8 @@
 package vn.elca.training.repository.custom;
 
-public interface EmployeeRepositoryCustom {
+import vn.elca.training.model.entity.Employee;
 
+public interface EmployeeRepositoryCustom {
+    Employee findByVisa(String visa);
 
 }

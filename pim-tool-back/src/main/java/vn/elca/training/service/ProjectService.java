@@ -23,7 +23,7 @@ public interface ProjectService {
 
     Project update(ProjectDto projectDto);
 
-    Project saveProject(Project project);
+    Project saveProject(ProjectDto projectDto);
 
     List<String> getListEmployee(Long id);
 

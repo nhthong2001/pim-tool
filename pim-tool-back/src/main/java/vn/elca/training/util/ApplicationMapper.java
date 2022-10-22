@@ -35,6 +35,7 @@ public class ApplicationMapper {
                 .status(entity.getStatus().toString()) // handle
                 .startDate(entity.getStartDate())
                 .endDate(entity.getEndDate())
+                .version(entity.getVersion())
                 .build();
 
         return dto;

@@ -8,17 +8,8 @@ export class Project {
   public status: string;
   public startDate: Date;
   public endDate: Date;
+  public version?: number;
 
-  constructor(
-    id: number,
-    projectName: string,
-    projectNumber: number,
-    customer: string,
-    group: string,
-    member: string[],
-    status: string,
-    startDate: Date,
-    endDate: Date
-  ) {
+  constructor() {
   }
 }

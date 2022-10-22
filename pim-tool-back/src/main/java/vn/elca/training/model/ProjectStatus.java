@@ -24,5 +24,6 @@ public enum ProjectStatus {
         public String toString() {
             return "Finished";
         }
-    }
+    },
+
 }

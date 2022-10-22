@@ -10,6 +10,7 @@ import vn.elca.training.service.ProjectService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -46,14 +47,14 @@ public class ProjectController extends AbstractApplicationController {
 
     @GetMapping("/{id}")
     public ProjectDto getById(@PathVariable("id") Long id) {
-//        Optional<Project> project = projectService.findById(id);
-//
-//        if (project.isEmpty()) {
-//            throw new NotFoundException("Can't find project with id = " + id);
-//        }
-//
-//        return mapper.projectToProjectDto(project.get());
-        return null;
+        Optional<Project> project = projectService.findById(id);
+
+        if (project.isEmpty()) {
+            throw new NotFoundException("Can't find project with id = " + id);
+        }
+
+        List<String> members = projectService.getListEmployee(project.get().getId());
+        return mapper.projectToProjectDto(project.get(), members);
     }
 
 
@@ -70,15 +71,15 @@ public class ProjectController extends AbstractApplicationController {
     }
 
     @PostMapping
-    public String addNew(@RequestBody @Valid Project project) {
-        Project projectNew = projectService.saveProject(project);
+    public ProjectDto addNew(@RequestBody ProjectDto projectDto) {
+        Project projectNew = projectService.saveProject(projectDto);
 
-        if (project == null) {
-            throw new NotFoundException("Can't update project with id = " + projectNew.getId());
-        }
+//        if (project == null) {
+//            throw new NotFoundException("Can't update project with id = " + projectNew.getId());
+//        }
 
-
-        return "Successful to update Project [" + projectNew.getId() + "]";
+        List<String> members = projectService.getListEmployee(projectNew.getId());
+        return mapper.projectToProjectDto(projectNew, members);
     }
 
 

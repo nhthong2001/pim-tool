@@ -5,10 +5,13 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.model.entity.Employee;
+import vn.elca.training.model.entity.Group;
 import vn.elca.training.model.entity.Project;
 import vn.elca.training.repository.EmployeeRepository;
+import vn.elca.training.repository.GroupRepository;
 import vn.elca.training.repository.ProjectRepository;
 import vn.elca.training.service.ProjectService;
+import vn.elca.training.util.Converter;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -27,6 +30,12 @@ import java.util.stream.Collectors;
 public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private GroupRepository groupRepository;
 
     @Autowired
     private Validator validator;
@@ -77,7 +86,29 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project saveProject(Project project) {
+    public Project saveProject(ProjectDto projectDto) {
+
+        Project project = new Project();
+        project.setProjectNumber(projectDto.getProjectNumber());
+        project.setName(projectDto.getProjectName());
+        project.setCustomer(projectDto.getCustomer());
+
+        Group group = groupRepository.findByGroupLeader_Visa(projectDto.getGroup());
+        project.setGroup(group);
+        project.setStatus(Converter.status(projectDto.getStatus()));
+        project.setStartDate(projectDto.getStartDate());
+        project.setEndDate(projectDto.getEndDate());
+
+        projectDto.getMember().stream().forEach(visa -> {
+            visa = visa.trim();
+            Employee employee = employeeRepository.findByVisa(visa);
+            if (employee == null) {
+                employee = new Employee(visa);
+            }
+            employee.getProjects().add(project);
+            employeeRepository.save(employee);
+            project.getEmployees().add(employee);
+        });
 
 
         return projectRepository.save(project);

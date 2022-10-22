@@ -12,7 +12,7 @@ const appRoutes: Routes = [
     path: 'project', component: ProjectComponent, children: [
       {path: 'project-list', component: ProjectListComponent},
       {path: 'new', component: ProjectFormComponent},
-      {path: 'update/:id', component: ProjectFormComponent},
+      {path: 'edit/:id', component: ProjectFormComponent},
     ]
   },
   {path: '**', component: ErrorPageComponent},

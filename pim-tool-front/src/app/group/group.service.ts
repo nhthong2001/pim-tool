@@ -1,23 +1,28 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Group} from "./group.model";
+import {map} from "rxjs";
 
 @Injectable({
-  providedIn: "root"
+    providedIn: "root"
   }
 )
 export class GroupService {
-  listGroup: Group[] = [];
-
   constructor(private http: HttpClient) {
-    this.http.get("http://localhost:8080/groups").subscribe(res => {
-      for (let i in res) {
-        this.listGroup.push({...res[i]});
-      }
-    })
+
   }
 
-  getGroups() {
-    return this.listGroup;
+  fetchGroups() {
+    return this.http
+      .get<Group[]>("http://localhost:8080/groups")
+      .pipe(
+        map(data => {
+          const listGroup: Group[] = [];
+          for (let i in data) {
+            listGroup.push({...data[i]});
+          }
+          return listGroup;
+        })
+      )
   }
 }
