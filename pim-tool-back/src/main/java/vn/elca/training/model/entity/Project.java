@@ -2,6 +2,7 @@ package vn.elca.training.model.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import vn.elca.training.model.ProjectStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -19,27 +20,33 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id")
+    private Group group;
+
+    @Column(name = "project_number")
+    private Integer projectNumber;
+
     @Column(nullable = false)
     private String name;
 
     @Column
+    private String customer;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 3)
+    private ProjectStatus status;
+
+    @Column(name = "start_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate startDate;
 
-    @Column
+    @Column(name = "end_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    private LocalDate finishingDate;
-
-    @Column
-    private String customer;
-
-    @Column
-    private boolean activated = true;
+    private LocalDate endDate;
 
     @Column(name = "version")
     private Long version;
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private Set<Task> tasks = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "project_employee",
@@ -47,14 +54,6 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "employee_id")
     )
     private Set<Employee> employees = new HashSet<>();
-
-    @ManyToOne(
-            cascade = CascadeType.PERSIST, // testSaveOne projectRepository
-            fetch = FetchType.LAZY
-    )
-    @JoinColumn(name = "group_id")
-    private Group group;
-
 
 
 
@@ -64,19 +63,16 @@ public class Project {
 
     public Project(String name, LocalDate finishingDate) {
         this.name = name;
-        this.finishingDate = finishingDate;
+        this.endDate = finishingDate;
     }
 
     public Project(Long id, String name, LocalDate finishingDate) {
         this.id = id;
         this.name = name;
-        this.finishingDate = finishingDate;
+        this.endDate = finishingDate;
     }
 
-    public Project() {
-
-    }
-
+    public Project() { }
 
     public Long getId() {
         return id;
@@ -84,56 +80,6 @@ public class Project {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public LocalDate getFinishingDate() {
-        return finishingDate;
-    }
-
-    public void setFinishingDate(LocalDate finishingDate) {
-        this.finishingDate = finishingDate;
-    }
-
-    public String getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(String customer) {
-        this.customer = customer;
-    }
-
-    public Set<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(Set<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    public void addEmployee(Employee employee){
-        employees.add(employee);
-        employee.getProjects().add(this);
-    }
-
-    public void removeEmployee(Employee employee){
-        employees.remove(employee);
-        employee.getProjects().remove(this);
-    }
-
-    public Set<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(Set<Employee> employees) {
-        this.employees = employees;
     }
 
     public Group getGroup() {
@@ -144,17 +90,68 @@ public class Project {
         this.group = group;
     }
 
-    public void addGroup(Group group) {
-        this.group = group;
-        group.getProjects().add(this);
+    public Integer getProjectNumber() {
+        return projectNumber;
     }
 
-    public boolean isActivated() {
-        return activated;
+    public void setProjectNumber(Integer projectNumber) {
+        this.projectNumber = projectNumber;
     }
 
-    public void setActivated(boolean activated) {
-        this.activated = activated;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+
+    public ProjectStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProjectStatus status) {
+        this.status = status;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public Set<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
     }
 
     @Override

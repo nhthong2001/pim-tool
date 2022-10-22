@@ -4,18 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import vn.elca.training.model.dto.ProjectDto;
+import vn.elca.training.model.entity.Employee;
 import vn.elca.training.model.entity.Project;
+import vn.elca.training.repository.EmployeeRepository;
 import vn.elca.training.repository.ProjectRepository;
 import vn.elca.training.service.ProjectService;
 
-import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author vlp
@@ -68,24 +69,32 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         return projectRepository.findById(projectDto.getId()).map(projectUpdate -> {
-            projectUpdate.setName(projectDto.getName());
+            projectUpdate.setName(projectDto.getProjectName());
             projectUpdate.setCustomer(projectDto.getCustomer());
-            projectUpdate.setFinishingDate(projectDto.getFinishingDate());
+            projectUpdate.setEndDate(projectDto.getEndDate());
             return projectRepository.save(projectUpdate);
         }).orElse(null);
     }
 
     @Override
-    @Transactional
-    public Project maintain(Long id) {
-        return projectRepository.findById(id).map(project -> {
-            project.setActivated(false);
-            projectRepository.save(project);
+    public Project saveProject(Project project) {
 
-            String newPjName = project.getName() + "Maint." + LocalDate.now().getYear();
-            Project maintainPj = new Project(newPjName);
-            projectRepository.save(maintainPj);
-            return project;
-        }).orElse(null);
+
+        return projectRepository.save(project);
     }
+
+    @Override
+    public List<String> getListEmployee(Long projectId) {
+        Set<Employee> employeeList = projectRepository.findEmployeeById(projectId);
+        return employeeList
+                .stream()
+                .map(employee -> employee.getVisa())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Project> findAllProjectInfo() {
+        return projectRepository.findAllProjectInfo();
+    }
+
 }

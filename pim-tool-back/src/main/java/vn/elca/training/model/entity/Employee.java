@@ -3,6 +3,7 @@ package vn.elca.training.model.entity;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -14,25 +15,27 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "visa", nullable = false)
-    @Length(max = 4)
+    @Length(max = 3)
     private String visa;
-    @ManyToMany(mappedBy = "employees")
-    private Set<Project> projects = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "employee_role",
-            joinColumns = @JoinColumn(name = "employee_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+    @Column(name = "first_name")
+    private String firstName;
 
-    @OneToMany(mappedBy = "groupLeader",
-            orphanRemoval = true
-    )
-    private Set<Group> groupsLead = new HashSet<>();
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
 
     @Column(name = "version")
     private Long version;
+
+    @ManyToMany(mappedBy = "employees")
+    private Set<Project> projects = new HashSet<>();
+
+    @OneToMany(mappedBy = "groupLeader")
+    private Set<Group> groupsLead = new HashSet<>();
+
 
     public Employee() {
     }
@@ -57,6 +60,38 @@ public class Employee {
         this.visa = visa;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     public Set<Project> getProjects() {
         return projects;
     }
@@ -65,27 +100,9 @@ public class Employee {
         this.projects = projects;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-    public void addRole(Role role) {
-        roles.add(role);
-        role.getEmployees().add(this);
-    }
-
-    public void removeRole(Role role) {
-        roles.remove(role);
-        role.getEmployees().remove(this);
-    }
     public Set<Group> getGroupsLead() {
         return groupsLead;
     }
-
-
 
     public void setGroupsLead(Set<Group> groupsLead) {
         this.groupsLead = groupsLead;

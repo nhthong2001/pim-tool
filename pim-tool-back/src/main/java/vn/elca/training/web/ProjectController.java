@@ -10,7 +10,6 @@ import vn.elca.training.service.ProjectService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -26,34 +25,39 @@ public class ProjectController extends AbstractApplicationController {
 
     @GetMapping
     public List<ProjectDto> getAll() {
-        return projectService.findAll()
+        return projectService.findAllProjectInfo()
                 .stream()
-                .map(mapper::projectToProjectDto)
+                .map(project -> {
+                    List<String> members = projectService.getListEmployee(project.getId());
+                    return mapper.projectToProjectDto(project, members);
+                })
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/search/{keyword}")
     public List<ProjectDto> search(@PathVariable String keyword) {
-        return projectService.findByKeyword(keyword)
-                .stream()
-                .map(mapper::projectToProjectDto)
-                .collect(Collectors.toList());
+//        return projectService.findByKeyword(keyword)
+//                .stream()
+//                .map(mapper::projectToProjectDto)
+//                .collect(Collectors.toList());
+        return null;
     }
 
 
     @GetMapping("/{id}")
     public ProjectDto getById(@PathVariable("id") Long id) {
-        Optional<Project> project = projectService.findById(id);
-
-        if (project.isEmpty()) {
-            throw new NotFoundException("Can't find project with id = " + id);
-        }
-
-        return mapper.projectToProjectDto(project.get());
+//        Optional<Project> project = projectService.findById(id);
+//
+//        if (project.isEmpty()) {
+//            throw new NotFoundException("Can't find project with id = " + id);
+//        }
+//
+//        return mapper.projectToProjectDto(project.get());
+        return null;
     }
 
 
-    @PostMapping
+    @PutMapping
     public String update(@RequestBody @Valid ProjectDto projectDto) {
         Project project = projectService.update(projectDto);
 
@@ -65,10 +69,17 @@ public class ProjectController extends AbstractApplicationController {
         return "Successful to update Project [" + projectDto.getId() + "]";
     }
 
-    @PostMapping("/maintain/{id}")
-    public String maintenance(@PathVariable Long id) {
-        Project project = projectService.maintain(id);
+    @PostMapping
+    public String addNew(@RequestBody @Valid Project project) {
+        Project projectNew = projectService.saveProject(project);
 
-        return "Successful to update Project [" + id + "]";
+        if (project == null) {
+            throw new NotFoundException("Can't update project with id = " + projectNew.getId());
+        }
+
+
+        return "Successful to update Project [" + projectNew.getId() + "]";
     }
+
+
 }

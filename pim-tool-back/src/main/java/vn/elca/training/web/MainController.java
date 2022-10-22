@@ -28,7 +28,6 @@ public class MainController extends AbstractApplicationController {
 
     @GetMapping("/main")
     public String main() {
-        groupService.initGroup();
         return title + ". " + String.format(message, projectService.count());
     }
 }

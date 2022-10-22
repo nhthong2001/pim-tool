@@ -3,6 +3,7 @@ package vn.elca.training.service;
 import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.model.entity.Project;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,5 +23,9 @@ public interface ProjectService {
 
     Project update(ProjectDto projectDto);
 
-    Project maintain(Long id);
+    Project saveProject(Project project);
+
+    List<String> getListEmployee(Long id);
+
+    List<Project> findAllProjectInfo();
 }
