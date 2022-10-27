@@ -4,25 +4,25 @@
       <a class="nav-link pb-3"
          routerLink="/project/project-list"
          style="cursor: pointer">
-        Projects List </a>
+        {{ 'sideBar.projectList' | translate}} </a>
     </h5>
 
   </li>
   <h5 class="nav-item">
     <a class="nav-link pb-3"
        style="color: black">
-      New</a>
+      {{ 'sideBar.new' | translate}}</a>
   </h5>
   <li class="nav-item">
     <a class="nav-link"
        [routerLinkActive]="'router-link-active'"
        style="cursor: pointer; color: gray"
-       routerLink="/project/new">Project</a>
+       routerLink="/project/new">{{ 'sideBar.project' | translate}}</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" style="color: gray" routerLink="customer">Customer</a>
+    <a class="nav-link" style="color: gray" routerLink="customer">{{ 'sideBar.customer' | translate}}</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" style="color: gray" routerLink="supplier">Supplier</a>
+    <a class="nav-link" style="color: gray" routerLink="supplier">{{ 'sideBar.supplier' | translate}}</a>
   </li>
 </ul>

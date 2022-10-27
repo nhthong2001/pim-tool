@@ -4,19 +4,19 @@
     <hr>
     <form class="form-row mb-5" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
       <div class="col-md-4">
-        <input type="text" placeholder="Project number, name, customer name" class="form-control col-md-11"
+        <input type="text" placeholder="{{'placeholder.searchInput' | translate}}" class="form-control col-md-11"
                id="projectNameSearch" formControlName="projectInfo" name="projectInfo">
       </div>
       <div class="col-md-2">
         <select type="text" class="form-control col-md-8" id="projectStatusSearch" formControlName="status"
                 name="status">
-          <option class="disabled" value="">Project Status</option>
-          <option *ngFor="let s of status" [ngValue]="s">{{ s }}</option>
+          <option class="disabled" value="">{{'placeholder.status' | translate}}</option>
+          <option *ngFor="let s of status" [ngValue]="s">{{ projectStatusEnumToKey(s) | translate }}</option>
         </select>
       </div>
       <div class="col-md-6">
-        <button class="btn btn-primary mr-5" type="submit">Search Project</button>
-        <button class="btn ml-5 text-primary" type="button" (click)="onReset()">Reset Search</button>
+        <button class="btn btn-primary mr-5" type="submit">{{'actions.searchProject' | translate}}</button>
+        <button class="btn ml-5 text-primary" type="button" (click)="onReset()">{{'actions.resetSearch' | translate}}</button>
       </div>
     </form>
     <ng-container *ngIf="!isNotFound">
@@ -25,16 +25,16 @@
         <tr>
           <th scope="col-1"></th>
           <th scope="col-auto">
-            <div class="d-flex justify-content-end">Number</div>
+            <div class="d-flex justify-content-end">{{'table.number' | translate}}</div>
           </th>
-          <th scope="col-4">Name</th>
-          <th scope="col-auto">Status</th>
-          <th scope="col-auto">Customer</th>
+          <th scope="col-4">{{'table.name' | translate}}</th>
+          <th scope="col-auto">{{'table.status' | translate}}</th>
+          <th scope="col-auto">{{'table.customer' | translate}}</th>
           <th scope="col-auto">
-            <div class="d-flex justify-content-center">Start Date</div>
+            <div class="d-flex justify-content-center">{{'table.startDate' | translate}}</div>
           </th>
           <th scope="col-1">
-            <div class="d-flex justify-content-center">Delete</div>
+            <div class="d-flex justify-content-center">{{'table.delete' | translate}}</div>
           </th>
         </tr>
         </thead>
@@ -51,13 +51,13 @@
               <div class="d-flex justify-content-end">{{project.projectNumber}}</div>
             </td>
             <td>{{project.projectName}}</td>
-            <td>{{project.status}}</td>
+            <td>{{projectStatusEnumToKey(project.status) | translate}}</td>
             <td>{{project.customer}}</td>
             <td>
               <div class="d-flex justify-content-center">{{project.startDate}}</div>
             </td>
             <td>
-              <div *ngIf="project.status === 'New'" class="d-flex justify-content-center">
+              <div *ngIf="project.status === ProjectStatus.NEW" class="d-flex justify-content-center">
                 <a (click)="onDelete(project.id)"><i class="bi bi-trash3-fill" style="color: red; cursor: pointer"></i></a>
               </div>
             </td>
@@ -66,9 +66,9 @@
         <tr id="info-selected" id="tr-end" *ngIf="listCheckedProjectId.length > 1">
           <td class="table-info" colspan="7">
             <div class="d-flex justify-content-sm-between">
-              <span class="text-primary">{{this.listCheckedProjectId.length}} items selected</span>
+              <span class="text-primary">{{this.listCheckedProjectId.length}} {{'itemSelected' | translate}}</span>
               <span class="text-danger">
-                  <a style="color: red; cursor: pointer" (click)="onDeleteListProject()">delete selected items <i
+                  <a style="color: red; cursor: pointer" (click)="onDeleteListProject()">{{'deleteSelectedItem(s)' | translate}} <i
                     class="bi bi-trash3-fill"></i></a>
                 </span>
             </div>
@@ -77,7 +77,7 @@
         </tbody>
       </table>
     </ng-container>
-    <h1 *ngIf="isNotFound" class="d-flex justify-content-center">Project is not found</h1>
+    <h2 *ngIf="isNotFound" class="d-flex justify-content-center align-items-center">{{'searchEmptyResults' | translate}}</h2>
 
     <!--      <nav class="d-flex justify-content-end">-->
     <!--        <ul class="pagination">-->

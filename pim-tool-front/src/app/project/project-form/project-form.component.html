@@ -1,8 +1,11 @@
 <div class="row mt-4 ml-4">
   <div class="col-lg-9">
     <div class="container">
-      <h2>
-        {{ state }}
+      <h2 *ngIf="!isEdited">
+        {{ 'form.new' | translate }}
+      </h2>
+      <h2 *ngIf="isEdited">
+        {{ 'form.edit' | translate }}
       </h2>
       <div class="col-md-10 no-padding">
         <hr>
@@ -10,7 +13,7 @@
       <form (ngSubmit)="onSubmit()" [formGroup]="projectForm">
         <ng-container *ngIf="isAlertMandatoryError">
           <div class="alert alert-danger alert-dismissible fade show col-md-10" role="alert">
-            Please enter all the mandatory fields (*)
+            {{'form.mandatoryFields' | translate}}
             <button type="button" class="close" aria-label="Close" (click)="closeAlertError()">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -30,12 +33,12 @@
             >
           </div>
           <div class="col-md-6">
-            <span class="text-danger" *ngIf="isAlertProjectNumberError && !isEdited">The project number already existed. Please select a different project number</span>
+            <span class="text-danger" *ngIf="isAlertProjectNumberError && !isEdited">{{'form.projectNumberError' | translate}}</span>
           </div>
         </div>
         <div class="form-group row mt-5">
           <label for="projectName" class="col-sm-2 col-form-label">
-            Project Name <span class="text-danger">*</span></label>
+            {{'form.projectName' | translate}} <span class="text-danger">*</span></label>
           <div class="col-md-8">
             <input
               type="text"
@@ -49,7 +52,7 @@
 
         <div class="form-group row mt-5">
           <label for="customer" class="col-sm-2 col-form-label">
-            Customer <span class="text-danger">*</span>
+            {{'form.customer' | translate}} <span class="text-danger">*</span>
           </label>
           <div class="col-md-8">
             <input
@@ -62,7 +65,7 @@
         </div>
         <div class="form-group row mt-5">
           <label for="group" class="col-sm-2 col-form-label">
-            Group <span class="text-danger">*</span>
+            {{'form.group' | translate}} <span class="text-danger">*</span>
           </label>
           <div class="col-md-3">
             <select
@@ -76,7 +79,7 @@
         </div>
         <div class="form-group row mt-5">
           <label for="members" class="col-sm-2 col-form-label">
-            Members
+            {{'form.members' | translate}}
           </label>
           <div class="col-md-8">
             <input
@@ -91,7 +94,7 @@
           <div class="col-sm-2">
           </div>
           <div class="col-md-8">
-            <span class="text-danger">The following visa<ng-container *ngIf="inValidVisa.length > 1">s</ng-container> do not exist:
+            <span class="text-danger">{{'visasNotExist'| translate}}:
               {{listInvalidVisa}}
             </span>
           </div>
@@ -99,7 +102,7 @@
 
         <div class="form-group row mt-5">
           <label for="status" class="col-sm-2 col-form-label">
-            Status <span class="text-danger">*</span>
+            {{'form.status' | translate}} <span class="text-danger">*</span>
           </label>
           <div class="col-md-3">
             <select
@@ -107,13 +110,13 @@
               id="status"
               formControlName="status"
               name="status">
-              <option *ngFor="let s of status" [ngValue]="s">{{ s }}</option>
+              <option *ngFor="let s of status" [ngValue]="s">{{ projectStatusEnumToKey(s) | translate  }}</option>
             </select>
           </div>
         </div>
         <div class="form-group row mt-5">
           <label for="startDate" class="col-sm-2 col-form-label">
-            Start Date <span class="text-danger">*</span>
+            {{'form.startDate' | translate}} <span class="text-danger">*</span>
           </label>
           <div class="col-md-3">
             <input
@@ -126,7 +129,7 @@
           </div>
 
           <label for="endDate" class="col-sm-2 col-form-label d-flex justify-content-end">
-            End Date
+            {{'form.endDate' | translate}}
           </label>
           <div class="col-md-3">
             <input
@@ -141,7 +144,7 @@
         <div class="form-group row">
           <div class="col-md-7"></div>
           <div class="col-md-3">
-            <span class="text-danger" *ngIf="isInValidDateEnd">End date must be after Start date</span>
+            <span class="text-danger" *ngIf="isInValidDateEnd">{{'form.endDateError' | translate}}</span>
           </div>
         </div>
         <div class="mt-5 col-md-10 no-padding">
@@ -149,17 +152,17 @@
         </div>
         <div class="mt-5 d-flex justify-content-end">
           <button class="btn mr-5" style="background: #B9B9B9" (click)="onCancel()" type="button">
-            Cancel
+            {{'actions.cancel' | translate}}
           </button>
           <button
             type="submit"
             class="btn text-white"
             style="background: #2F85FA">
             <ng-container *ngIf="!isEdited">
-              Create Project
+              {{'actions.createProject' | translate}}
             </ng-container>
             <ng-container *ngIf="isEdited">
-              Update Project
+              {{'actions.editProject' | translate}}
             </ng-container>
           </button>
         </div>

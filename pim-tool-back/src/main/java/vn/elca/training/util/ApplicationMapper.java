@@ -45,7 +45,7 @@ public class ApplicationMapper {
                 .customer(entity.getCustomer())
                 .group(entity.getGroup().getGroupLeader().getVisa())
                 .member(members)
-                .status(entity.getStatus().toString())
+                .status(entity.getStatus())
                 .startDate(startDateString)
                 .endDate(endDateString)
                 .version(entity.getVersion())
@@ -58,16 +58,14 @@ public class ApplicationMapper {
         DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd.MM.uuuu");
         String startDateString =  entity.getStartDate().format(formatters);
 
-        ProjectDto dto = ProjectDto.builder()
+        return ProjectDto.builder()
                 .id(entity.getId())
                 .projectNumber(entity.getProjectNumber())
                 .projectName(entity.getName())
-                .status(entity.getStatus().toString())
+                .status(entity.getStatus())
                 .customer(entity.getCustomer())
                 .startDate(startDateString)
                 .build();
-
-        return dto;
     }
 
 
@@ -85,7 +83,7 @@ public class ApplicationMapper {
         Group group = groupRepository.findByGroupLeader_Visa(projectDto.getGroup());
         project.setGroup(group);
 
-        project.setStatus(Converter.status(projectDto.getStatus()));
+        project.setStatus(projectDto.getStatus());
 
         LocalDate startDate = LocalDate.parse(projectDto.getStartDate());
         project.setStartDate(startDate);

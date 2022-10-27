@@ -2,13 +2,13 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import * as moment from 'moment';
-import {TranslateService} from "@ngx-translate/core";
 
 import {GroupService} from "../../group/group.service";
 import {ProjectService} from "../project.service";
 import {Project} from "../project.model";
 import {Group} from "../../group/group.model";
 import {EmployeeService} from "../../employee/employee.service";
+import {ProjectStatus} from "../project-status.enum";
 
 @Component({
   selector: 'app-project-form',
@@ -17,7 +17,6 @@ import {EmployeeService} from "../../employee/employee.service";
 })
 export class ProjectFormComponent implements OnInit {
   project: Project;
-  state = 'New Project';
   isEdited = false;
   isValidProjectNumber = true;
   isAlertMandatoryError = false;
@@ -27,8 +26,9 @@ export class ProjectFormComponent implements OnInit {
   validVisa: string[] = [];
   listInvalidVisa: string;
   id: number;
-  status: string[] = ['New', 'Planned', 'In progress', 'Finished'];
-  defaultStatus: string = 'New';
+  ProjectStatus: ProjectStatus;
+  status: ProjectStatus[] = [ProjectStatus.NEW, ProjectStatus.PLA, ProjectStatus.INP, ProjectStatus.FIN];
+  defaultStatus: ProjectStatus = ProjectStatus.NEW;
   groups: Group[] = [];
   projectForm: FormGroup;
   projectControls = {
@@ -48,8 +48,7 @@ export class ProjectFormComponent implements OnInit {
               private groupService: GroupService,
               private employeeService: EmployeeService,
               private route: ActivatedRoute,
-              private router: Router,
-              private translate: TranslateService) {
+              private router: Router) {
     this.project = new Project();
   }
 
@@ -80,7 +79,6 @@ export class ProjectFormComponent implements OnInit {
     if (this.isEdited) {
       this.projectService.fetchProjectById(this.id).subscribe(data => {
         this.project = data;
-        this.state = 'Edit Project';
         const sd = moment(this.project.startDate, "DD/MM/YYYY").format('YYYY-MM-DD');
         const ed = moment(this.project.endDate, "DD/MM/YYYY").format('YYYY-MM-DD');
         const members = this.project.member.join();
@@ -199,7 +197,9 @@ export class ProjectFormComponent implements OnInit {
   }
 
   onCancel() {
-    this.router.navigate(['/project/project-list'], {relativeTo: this.route})
+    if (confirm("Are you sure cancel?")) {
+      this.router.navigate(['/project/project-list'], {relativeTo: this.route})
+    }
   }
 
   closeAlertError() {
@@ -208,5 +208,8 @@ export class ProjectFormComponent implements OnInit {
 
   onInputProjectNumber() {
     this.isAlertProjectNumberError = false;
+  }
+  projectStatusEnumToKey(status: ProjectStatus){
+    return ProjectStatus[status];
   }
 }

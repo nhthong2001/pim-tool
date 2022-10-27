@@ -1,5 +1,76 @@
 {
+
+  "or": "ou",
+  "please": "S'il vous plaît",
+
+  "searchEmptyResults": "Aucun résultat trouvé",
+  "itemSelected" : "élément(s) sélectionné(s)",
+  "deleteSelectedItem(s)": "supprimer les éléments sélectionnés",
+  "visasNotExist": "Les visas suivants n'existent pas",
+  "NEW": "Nouveau",
+  "FIN": "Achevée",
+  "INP": "En cours",
+  "PLA": "Prévue",
+
+  "header": {
+    "help": "Aider",
+    "logout": "Se déconnecter",
+    "title": "Gestion des informations du projet"
+  },
+
   "form": {
-    "projectNumber": "Numéro de projet"
+    "new": "Nouveau projet",
+    "edit": "Modifier les informations du projet",
+    "projectNumber": "Numéro de projet",
+    "projectNumberError": "Le numéro de projet existait déjà. Veuillez sélectionner un autre numéro de projet",
+    "projectName": "Nom du projet",
+    "customer": "Client",
+    "group": "Groupe",
+    "members": "Membres",
+    "status": "Statut",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "endDateError": "La date de fin doit être postérieure à la date de début",
+    "mandatoryFields": "Veuillez renseigner tous les champs obligatoires (*)"
+  },
+
+  "table": {
+    "number": "Numéro",
+    "name": "Nom",
+    "status": "Statut",
+    "customer": "Client",
+    "startDate": "Date de début",
+    "delete": "Effacer",
+    "projectList": "Liste de projets"
+  },
+
+  "sideBar": {
+    "new": "Nouveau",
+    "projectList": "Liste de projets",
+    "project": "Projet",
+    "customer": "Client",
+    "supplier": "Le fournisseur"
+  },
+
+  "actions": {
+    "delete": "Effacer",
+    "search":"Chercher",
+    "searchProject": "Rechercher un projet",
+    "resetSearch": "Réinitialiser la recherche",
+    "createProject": "Créer un projet",
+    "editProject": "Modifier le projet",
+    "cancel": "Annuler"
+  },
+
+  "error": {
+    "message": "(FR)Unexpected error occurred",
+    "please": "(FR)Please",
+    "contact": "(FR)contact your administrator",
+    "or": "(FR)or",
+    "back": "(FR)back to search project"
+  },
+  "placeholder": {
+    "searchInput": "Numéro de projet, nom, nom du client",
+    "status": "L'état du projet"
   }
 }

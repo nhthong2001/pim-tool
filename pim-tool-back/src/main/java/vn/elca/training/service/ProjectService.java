@@ -1,5 +1,6 @@
 package vn.elca.training.service;
 
+import vn.elca.training.model.ProjectStatus;
 import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.model.entity.Project;
 import vn.elca.training.model.exception.InvalidProjectInfoException;
@@ -31,7 +32,9 @@ public interface ProjectService {
 
     Boolean isValidProjectNumber(Integer projectNumber);
 
-    List<Project> searchProject(String keyword, String status);
+    List<Project> searchProject(String keyword, ProjectStatus status);
+
+    List<Project> searchProject(String keyword);
 
     Long deleteProject(Long id);
 

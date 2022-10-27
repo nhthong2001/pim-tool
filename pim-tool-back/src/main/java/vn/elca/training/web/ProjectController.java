@@ -3,6 +3,7 @@ package vn.elca.training.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
+import vn.elca.training.model.ProjectStatus;
 import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.model.entity.Project;
 import vn.elca.training.model.exception.InvalidProjectInfoException;
@@ -35,8 +36,18 @@ public class ProjectController extends AbstractApplicationController {
     }
 
     @GetMapping("/search")
-    public List<ProjectDto> search(@RequestParam("keyword") String keyword, @RequestParam("status") String status) {
+    public List<ProjectDto> search(@RequestParam String keyword, @RequestParam ProjectStatus status) {
         return projectService.searchProject(keyword, status)
+                .stream()
+                .map(project -> {
+                    List<String> members = projectService.getListEmployee(project.getId());
+                    return mapper.projectToFullInfoProjectDto(project, members);
+                })
+                .collect(Collectors.toList());
+    }
+    @GetMapping("/searchByKeyword")
+    public List<ProjectDto> searchByKeyword(@RequestParam String keyword) {
+        return projectService.searchProject(keyword)
                 .stream()
                 .map(project -> {
                     List<String> members = projectService.getListEmployee(project.getId());

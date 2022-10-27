@@ -3,6 +3,7 @@ import {Project} from "../project.model";
 import {ProjectService} from "../project.service";
 import {FormControl, FormGroup} from "@angular/forms";
 import {LocalService} from "../../shared/local.service";
+import {ProjectStatus} from "../project-status.enum";
 
 @Component({
   selector: 'app-project-list',
@@ -12,11 +13,12 @@ import {LocalService} from "../../shared/local.service";
 export class ProjectListComponent implements OnInit {
 
   projectList: Project[] = []
-  status: string[] = ['New', 'Planned', 'In progress', 'Finished'];
+  status: ProjectStatus[] = [ProjectStatus.NEW, ProjectStatus.PLA, ProjectStatus.INP, ProjectStatus.FIN];
   searchForm: FormGroup;
   isNotFound = false;
   listCheckedProjectId: number[] = [];
   isDeletedListItem = false;
+  ProjectStatus = ProjectStatus;
 
   searchControls = {
     'projectInfo': new FormControl(''),
@@ -42,6 +44,7 @@ export class ProjectListComponent implements OnInit {
     this.searchForm = new FormGroup(this.searchControls);
 
     if (this.localStore.getData('searchData') !== null) {
+      console.log(this.localStore.getData('searchData').projectInfo);
       this.searchForm.patchValue({
         'projectInfo': this.localStore.getData('searchData').projectInfo || '',
         'status': this.localStore.getData('searchData').projectStatus || ''
@@ -52,7 +55,7 @@ export class ProjectListComponent implements OnInit {
   private getAllProject() {
     this.projectService.fetchProjects().subscribe(
       projects => {
-        this.projectList = projects;
+        this.projectList = projects.map(p => Object.assign(new Project(), {...p, status: ProjectStatus[p.status]}));
       }
     );
   }
@@ -60,11 +63,15 @@ export class ProjectListComponent implements OnInit {
   onSubmit() {
     let data = this.searchForm.value;
     if (data.projectInfo !== '' || data.status !== '') {
-      this.localStore.saveData("searchData", {projectInfo: data.projectInfo, projectStatus: data.status});
-      this.projectService.searchProject(data.projectInfo, data.status).subscribe(res => {
+      //Todo: save search info to localstorage
+      console.log(data);
+      this.localStore.saveData("searchData", {projectInfo: data.projectInfo, projectStatus: ProjectStatus[data.status]});
+
+
+      this.projectService.searchProject(data.projectInfo, ProjectStatus[data.status]).subscribe(res => {
         if (res.length !== 0) {
           this.isNotFound = false;
-          this.projectList = res;
+          this.projectList = res.map(p => Object.assign(new Project(), {...p, status: ProjectStatus[p.status]}));
         } else {
           this.isNotFound = true;
         }
@@ -95,8 +102,8 @@ export class ProjectListComponent implements OnInit {
     }
   }
 
-  isDisabled(status: string) {
-    return status !== 'New' ? true : null
+  isDisabled(status: ProjectStatus) {
+    return status !== ProjectStatus.NEW;
   }
 
   onChecked(event: any, id: number) {
@@ -121,5 +128,8 @@ export class ProjectListComponent implements OnInit {
         this.getAllProject();
       });
     }
+  }
+  projectStatusEnumToKey(status: ProjectStatus){
+    return ProjectStatus[status];
   }
 }

@@ -5,7 +5,7 @@
         <a routerLink="/">
           <img src="../../assets/Images/logo_elca.png" width="50" height="50" class="mr-4" alt="">
         </a>
-        <h3 class="d-flex align-items-end">Project Information Management</h3>
+        <h3 class="d-flex align-items-end">{{'header.title' | translate}}</h3>
       </div>
     </a>
 
@@ -14,10 +14,10 @@
       <span class="d-inline"><a (click)="switchLanguage('fr')" class="link">FR</a></span>
     </div>
     <div class="nav navbar-nav navbar-right">
-      <li><a class="link">Help</a></li>
+      <li><a class="link">{{'header.help' | translate}}</a></li>
     </div>
     <div class="nav navbar-nav navbar-right">
-      <li><a class="text-secondary">Log out</a></li>
+      <li><a class="text-secondary">{{'header.logout' | translate}}</a></li>
     </div>
   </div>
 </nav>

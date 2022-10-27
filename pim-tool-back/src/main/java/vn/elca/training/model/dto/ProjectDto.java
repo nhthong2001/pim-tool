@@ -1,10 +1,10 @@
 package vn.elca.training.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
+import vn.elca.training.model.ProjectStatus;
 
-import javax.validation.constraints.*;
-import java.time.LocalDate;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
@@ -29,7 +29,7 @@ public class ProjectDto {
 
     private List<String> member;
     @NotEmpty(message = "Status must not be empty")
-    private String status;
+    private ProjectStatus status;
 
     @NotEmpty(message = "Start Date must not be empty")
     private String startDate;
@@ -86,11 +86,11 @@ public class ProjectDto {
         this.member = member;
     }
 
-    public String getStatus() {
+    public ProjectStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ProjectStatus status) {
         this.status = status;
     }
 

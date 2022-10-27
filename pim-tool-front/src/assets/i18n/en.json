@@ -1,5 +1,77 @@
 {
+
+  "or": "or",
+  "please": "Please",
+
+  "searchEmptyResults": "No results found",
+  "itemSelected" : "item(s) selected",
+  "deleteSelectedItem(s)": "delete selected items",
+  "visasNotExist": "The following visa(s) do not exist",
+  "NEW": "New",
+  "FIN": "Finished",
+  "INP": "In progress",
+  "PLA": "Planned",
+  "header": {
+    "title": "Project Information Management",
+    "help": "Help",
+    "logout": "Log out"
+  },
+
   "form": {
-    "projectNumber": "Project Number"
+    "new": "New Project",
+    "edit": "Edit Project Information",
+    "projectNumber": "Project Number",
+    "projectNumberError": "The project number already existed. Please select a different project number",
+    "projectName": "Project Name",
+    "customer": "Customer",
+    "group": "Group",
+    "members": "Members",
+    "status": "Status",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "endDateError": "End date must be after Start date",
+    "mandatoryFields": "Please enter all the mandatory fields (*)",
+    "list": "Project List"
+  },
+
+  "table": {
+    "number": "Number",
+    "name": "Name",
+    "status": "Status",
+    "customer": "Customer",
+    "startDate": "Start Date",
+    "delete": "Delete",
+    "projectList": "Project List"
+  },
+  "sideBar": {
+    "new": "New",
+    "projectList": "Project List",
+    "project": "Project",
+    "customer": "Customer",
+    "supplier": "Supplier"
+  },
+
+
+
+  "actions": {
+    "delete": "Delete",
+    "search":"Search",
+    "searchProject": "Search Project ",
+    "resetSearch": "Reset Search",
+    "createProject": "Create Project",
+    "editProject": "Edit Project",
+    "cancel": "Cancel"
+  },
+
+  "error": {
+    "message": "Unexpected error occurred",
+    "please": "Please",
+    "contact": "contact your administrator",
+    "or": "or",
+    "back": "back to search project"
+  },
+  "placeholder": {
+    "searchInput": "Project number, name, customer name",
+    "status": "Project Status"
   }
 }

@@ -1,16 +1,13 @@
 package vn.elca.training.repository.custom;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import vn.elca.training.model.dto.SearchDataDto;
 import vn.elca.training.model.entity.*;
-import vn.elca.training.util.Converter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.Set;
 
 public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
     @PersistenceContext

@@ -16,7 +16,6 @@ import vn.elca.training.repository.GroupRepository;
 import vn.elca.training.repository.ProjectRepository;
 import vn.elca.training.service.ProjectService;
 import vn.elca.training.util.ApplicationMapper;
-import vn.elca.training.util.Converter;
 import vn.elca.training.validator.ProjectValidator;
 
 import java.util.List;
@@ -60,7 +59,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<Project> findByKeyword(String keyword) {
-        return projectRepository.findByNameContains(keyword);
+        return projectRepository.findByNameContainsIgnoreCase(keyword);
     }
 
     @Override
@@ -90,7 +89,7 @@ public class ProjectServiceImpl implements ProjectService {
     public Project updateProject(ProjectDto projectDto) throws StartDateAfterEndDateException, InvalidProjectInfoException {
         try {
             Optional<Project> project = this.findById(projectDto.getId());
-            if (project.get().getProjectNumber() != projectDto.getProjectNumber()) {
+            if (project.get().getProjectNumber().intValue() != projectDto.getProjectNumber().intValue()) {
                 throw new InvalidProjectInfoException("Project Number is not be modified!");
             }
         } catch (NotFoundException e) {
@@ -126,12 +125,17 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> searchProject(String keyword, String status) {
+    public List<Project> searchProject(String keyword, ProjectStatus status) {
         SearchDataDto searchDataDto = new SearchDataDto();
         searchDataDto.setKeyword(keyword);
-        searchDataDto.setStatus(Converter.status(status));
+        searchDataDto.setStatus(status);
 
         return projectRepository.findAllProjectByKeywordAndStatus(searchDataDto);
+    }
+
+    @Override
+    public List<Project> searchProject(String keyword) {
+          return projectRepository.findByNameContainsIgnoreCase(keyword);
     }
 
     @Override

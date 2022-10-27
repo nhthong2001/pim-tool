@@ -36,7 +36,11 @@ export class ProjectService {
   }
 
   searchProject(projectInfo: string, status: string) {
-    return this.http.get<Project[]>(this.url + '/search/', {params: {keyword: projectInfo, status: status}});
+    if (status !== undefined) {
+      return this.http.get<Project[]>(this.url + '/search', {params: {keyword: projectInfo, status: status}});
+    } else {
+      return this.http.get<Project[]>(this.url + '/searchByKeyword', {params: {keyword: projectInfo}});
+    }
   }
 
   deleteProject(projectId: number) {

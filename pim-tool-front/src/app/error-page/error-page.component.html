@@ -5,12 +5,9 @@
     </div>
     <div class="col-5 d-flex align-items-center">
       <div class="row">
-        <h3>
-          Unexpected error occurred [detail of the error].
-        </h3>
-        <h3>
-          Please contact your administrator
-        </h3>
+        <h3> {{'error.message' | translate}}</h3>
+        <h3>{{'error.please' | translate}} <span class="text-danger">{{'error.contact' | translate}}</span> </h3>
+        <h3>{{'error.or' | translate}} <a routerLink="/" class="text-primary" style="cursor: pointer">{{'error.back' | translate}}</a> </h3>
       </div>
     </div>
   </div>

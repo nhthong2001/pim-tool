@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
-import vn.elca.training.model.entity.Employee;
 import vn.elca.training.model.entity.Project;
 import vn.elca.training.repository.custom.ProjectRepositoryCustom;
 
@@ -17,11 +16,10 @@ import java.util.Optional;
  */
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long>, QuerydslPredicateExecutor<Project>, ProjectRepositoryCustom {
-    List<Project> findByNameContains(String keyword);
+    List<Project> findByNameContainsIgnoreCase(String keyword);
     Optional<Project> findByName(String name);
 
     Optional<Project> findByProjectNumber(Integer projectNumber);
 
 
-    void deleteAllByIdIn(List<Long> listId);
 }
