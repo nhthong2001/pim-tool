@@ -9,7 +9,7 @@ public class Converter {
             case "Planned": return ProjectStatus.PLA;
             case "In progress": return ProjectStatus.INP;
             case "Finished": return ProjectStatus.FIN;
-            default: return ProjectStatus.NEW;
+            default: return null;
         }
     }
 }

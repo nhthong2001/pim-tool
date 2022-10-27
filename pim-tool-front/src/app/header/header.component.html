@@ -1,22 +1,23 @@
-<nav class="navbar navbar-expand-sm navbar-light" style="background: #E0E0E0">
+<nav class="navbar navbar-expand-sm navbar-light bg-light" style="border-bottom: 1px solid #ced4da">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">
-      <img src="../../assets/Images/logo_elca.png" width="30" height="30" class="d-inline-block align-top" alt="">
-      Project Information Management
+    <a class="navbar-brand">
+      <div class="row">
+        <a routerLink="/">
+          <img src="../../assets/Images/logo_elca.png" width="50" height="50" class="mr-4" alt="">
+        </a>
+        <h3 class="d-flex align-items-end">Project Information Management</h3>
+      </div>
     </a>
 
-    <div class="nav navbar-nav navbar-right">
-      <ul>
-        <li class="d-inline"><a href="#">EN</a></li>
-        |
-        <li class="d-inline"><a href="#">FR</a></li>
-      </ul>
+    <div>
+      <span><a (click)="switchLanguage('en')" class="link">EN</a></span> |
+      <span class="d-inline"><a (click)="switchLanguage('fr')" class="link">FR</a></span>
     </div>
     <div class="nav navbar-nav navbar-right">
-      <li><a href="#">Help</a></li>
+      <li><a class="link">Help</a></li>
     </div>
     <div class="nav navbar-nav navbar-right">
-      <li><a href="#">Log out</a></li>
+      <li><a class="text-secondary">Log out</a></li>
     </div>
   </div>
 </nav>

@@ -2,10 +2,8 @@ package vn.elca.training.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
-import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,32 +12,109 @@ import java.util.List;
  *
  */
 @Builder
-@Data
 public class ProjectDto {
-    @NotNull(message = "ID must not be null")
     private Long id;
 
+   
+    @PositiveOrZero(message = "Project Number must be a positive number")
     private Integer projectNumber;
 
-    @NotBlank(message = "Name must not be blank")
+    @NotEmpty(message = "Name must not be empty")
     private String projectName;
 
-    @NotBlank(message = "Customer must not be blank")
+    @NotEmpty(message = "Customer must not be empty")
     private String customer;
-
+    @NotEmpty(message = "Group must not be empty")
     private String group;
 
     private List<String> member;
-
+    @NotEmpty(message = "Status must not be empty")
     private String status;
 
+    @NotEmpty(message = "Start Date must not be empty")
+    private String startDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    private LocalDate startDate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    private LocalDate endDate;
+    private String endDate;
 
     private  Long version;
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getProjectNumber() {
+        return projectNumber;
+    }
+
+    public void setProjectNumber(Integer projectNumber) {
+        this.projectNumber = projectNumber;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public List<String> getMember() {
+        return member;
+    }
+
+    public void setMember(List<String> member) {
+        this.member = member;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
 }

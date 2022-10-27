@@ -1,28 +1,39 @@
-<div class="row">
-  <div class="col-lg-10">
-    <h2>{{ state }}</h2>
-    <hr>
+<div class="row mt-4 ml-4">
+  <div class="col-lg-9">
     <div class="container">
+      <h2>
+        {{ state }}
+      </h2>
+      <div class="col-md-10 no-padding">
+        <hr>
+      </div>
       <form (ngSubmit)="onSubmit()" [formGroup]="projectForm">
-        <div class="form-group row">
+        <ng-container *ngIf="isAlertMandatoryError">
+          <div class="alert alert-danger alert-dismissible fade show col-md-10" role="alert">
+            Please enter all the mandatory fields (*)
+            <button type="button" class="close" aria-label="Close" (click)="closeAlertError()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </ng-container>
+        <div class="form-group row d-flex align-items-center mt-5">
           <label for="projectNumber" class="col-sm-2 col-form-label">
-            Project Number <span class="text-danger">*</span>
+            {{'form.projectNumber' | translate}}<span class="text-danger">*</span>
           </label>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <input
               type="number"
               class="form-control" id="projectNumber"
               formControlName="projectNumber"
+              (input)="onInputProjectNumber()"
               name="projectNumber"
-              >
+            >
           </div>
-          <div class="col-md-5">
-<!--              <span-->
-<!--                *ngIf="!projectNumber.valid && projectNumber.touched"-->
-<!--                class="text-danger">The project number already existed. Please select a different project number</span>-->
+          <div class="col-md-6">
+            <span class="text-danger" *ngIf="isAlertProjectNumberError && !isEdited">The project number already existed. Please select a different project number</span>
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row mt-5">
           <label for="projectName" class="col-sm-2 col-form-label">
             Project Name <span class="text-danger">*</span></label>
           <div class="col-md-8">
@@ -32,11 +43,11 @@
               id="projectName"
               formControlName="projectName"
               name="projectName"
-              >
+            >
           </div>
         </div>
 
-        <div class="form-group row">
+        <div class="form-group row mt-5">
           <label for="customer" class="col-sm-2 col-form-label">
             Customer <span class="text-danger">*</span>
           </label>
@@ -49,21 +60,21 @@
               name="customer">
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row mt-5">
           <label for="group" class="col-sm-2 col-form-label">
             Group <span class="text-danger">*</span>
           </label>
-          <div class="col-md-5">
+          <div class="col-md-3">
             <select
               class="form-control"
               id="group"
               formControlName="group"
               name="group">
-              <option *ngFor="let g of groups" [ngValue]="g.leader_visa">{{ g.leader_visa }}</option>
+              <option *ngFor="let g of groups" [ngValue]="g.leaderVisa">{{ g.leaderVisa }}</option>
             </select>
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row mt-5">
           <label for="members" class="col-sm-2 col-form-label">
             Members
           </label>
@@ -76,11 +87,21 @@
               name="member">
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" *ngIf="inValidVisa.length !== 0">
+          <div class="col-sm-2">
+          </div>
+          <div class="col-md-8">
+            <span class="text-danger">The following visa<ng-container *ngIf="inValidVisa.length > 1">s</ng-container> do not exist:
+              {{listInvalidVisa}}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group row mt-5">
           <label for="status" class="col-sm-2 col-form-label">
             Status <span class="text-danger">*</span>
           </label>
-          <div class="col-md-5">
+          <div class="col-md-3">
             <select
               class="form-control"
               id="status"
@@ -90,48 +111,60 @@
             </select>
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row mt-5">
           <label for="startDate" class="col-sm-2 col-form-label">
             Start Date <span class="text-danger">*</span>
           </label>
           <div class="col-md-3">
             <input
               type="date"
+              placeholder="dd-mm-yyyy"
               class="form-control"
               id="startDate"
               formControlName="startDate"
               name="startDate">
           </div>
 
-          <label for="endDate" class="col-sm-2 col-form-label">
+          <label for="endDate" class="col-sm-2 col-form-label d-flex justify-content-end">
             End Date
           </label>
           <div class="col-md-3">
             <input
               type="date"
+              placeholder="dd-mm-yyyy"
               class="form-control"
               id="endDate"
               formControlName="endDate"
               name="endDate">
           </div>
         </div>
-        <hr>
-
-        <div class="mt-4 mb-4 d-flex justify-content-end">
-          <button class="btn mr-5" style="background: #B9B9B9" (click)="onCancel()">
+        <div class="form-group row">
+          <div class="col-md-7"></div>
+          <div class="col-md-3">
+            <span class="text-danger" *ngIf="isInValidDateEnd">End date must be after Start date</span>
+          </div>
+        </div>
+        <div class="mt-5 col-md-10 no-padding">
+          <hr>
+        </div>
+        <div class="mt-5 d-flex justify-content-end">
+          <button class="btn mr-5" style="background: #B9B9B9" (click)="onCancel()" type="button">
             Cancel
           </button>
           <button
             type="submit"
             class="btn text-white"
-            style="background: #2F85FA"
-            >
-            Create Project
+            style="background: #2F85FA">
+            <ng-container *ngIf="!isEdited">
+              Create Project
+            </ng-container>
+            <ng-container *ngIf="isEdited">
+              Update Project
+            </ng-container>
           </button>
         </div>
       </form>
     </div>
   </div>
-  <div class="col-lg"></div>
 </div>
 

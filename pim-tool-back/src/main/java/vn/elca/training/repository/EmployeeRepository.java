@@ -6,6 +6,10 @@ import org.springframework.stereotype.Repository;
 import vn.elca.training.model.entity.Employee;
 import vn.elca.training.repository.custom.EmployeeRepositoryCustom;
 
+import java.util.List;
+
 @Repository
 public interface EmployeeRepository  extends JpaRepository<Employee, Long>, QuerydslPredicateExecutor<Employee>, EmployeeRepositoryCustom {
+
+    List<Employee> findAllByVisaIn(List<String> member);
 }

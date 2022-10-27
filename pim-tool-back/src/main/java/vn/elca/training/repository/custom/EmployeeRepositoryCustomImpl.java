@@ -17,13 +17,25 @@ public class EmployeeRepositoryCustomImpl implements EmployeeRepositoryCustom {
 
     @Override
     public Employee findByVisa(String visa) {
-        var employee = QEmployee.employee;
-        var project = QProject.project;
+        QEmployee employee = QEmployee.employee;
+        QProject project = QProject.project;
 
         return new JPAQuery<Employee>(em)
                 .from(employee)
                 .innerJoin(employee.projects, project).fetchJoin()
                 .where(employee.visa.eq(visa))
                 .fetchOne();
+    }
+
+    @Override
+    public List<Employee> findEmployeesByProjectId(Long projectId) {
+        QEmployee employee = QEmployee.employee;
+        QProject project = QProject.project;
+
+        return new JPAQuery<Employee>(em)
+                .from(employee)
+                .innerJoin(employee.projects, project).fetchJoin()
+                .where(project.id.eq(projectId))
+                .fetch();
     }
 }

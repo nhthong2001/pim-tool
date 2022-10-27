@@ -24,7 +24,7 @@ public class Project {
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @Column(name = "project_number")
+    @Column(name = "project_number", unique = true)
     private Integer projectNumber;
 
     @Column(nullable = false)
@@ -46,6 +46,7 @@ public class Project {
     private LocalDate endDate;
 
     @Column(name = "version")
+    @Version
     private Long version;
 
     @ManyToMany

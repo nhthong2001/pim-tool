@@ -17,7 +17,7 @@ public class Group {
 
     @Column(name = "version")
     private Long version;
-    @OneToMany(mappedBy = "group", orphanRemoval = true)
+    @OneToMany(mappedBy = "group")
     private Set<Project> projects = new HashSet<>();
 
 

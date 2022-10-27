@@ -1,0 +1,22 @@
+#projectNumber {
+  cursor: pointer;
+}
+
+#projectNumber:hover {
+  color: #2F85FA;
+  text-decoration: #2F85FA underline;
+}
+td, th {
+  border-left:1px solid #ced4da;
+  border-right:1px solid #ced4da;
+}
+thead th {
+  border: 1px solid #ced4da;
+}
+
+#tr-end {
+  border: 1px solid #ced4da;
+}
+table > tbody > tr:last-child {
+  border-bottom: 1px solid #ced4da;
+}

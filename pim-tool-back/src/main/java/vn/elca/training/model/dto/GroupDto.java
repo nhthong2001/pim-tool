@@ -1,15 +1,39 @@
 package vn.elca.training.model.dto;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-
-@Data
-@AllArgsConstructor
-@RequiredArgsConstructor
 public class GroupDto {
-    public Long id;
-    public Long leader_id;
-    public String leader_visa;
+    private Long id;
+    private Long leaderId;
+    private String leaderVisa;
 
+    public GroupDto() {
+    }
+
+    public GroupDto(Long id, Long leaderId, String leaderVisa) {
+        this.id = id;
+        this.leaderId = leaderId;
+        this.leaderVisa = leaderVisa;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getLeaderId() {
+        return leaderId;
+    }
+
+    public void setLeaderId(Long leaderId) {
+        this.leaderId = leaderId;
+    }
+
+    public String getLeaderVisa() {
+        return leaderVisa;
+    }
+
+    public void setLeaderVisa(String leaderVisa) {
+        this.leaderVisa = leaderVisa;
+    }
 }

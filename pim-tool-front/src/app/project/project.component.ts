@@ -9,17 +9,11 @@ import {Project} from "./project.model";
   styleUrls: ['./project.component.css']
 })
 export class ProjectComponent implements OnInit {
-  projectList: Project[] = []
 
-  constructor(private projectService: ProjectService) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.projectService.fetchProjects().subscribe(
-      projects => {
-        this.projectList = projects;
-      }
-    );
-   // console.log(this.projectList);
+
   }
 
 

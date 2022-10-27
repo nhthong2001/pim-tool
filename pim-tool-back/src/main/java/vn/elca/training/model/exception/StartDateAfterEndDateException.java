@@ -22,11 +22,11 @@ import java.time.LocalDate;
  * @author vlp
  *
  */
-public class DeadlineAfterFinishingDateException extends Exception {
+public class StartDateAfterEndDateException extends Exception {
     private final LocalDate projectFinishingDate;
     private final LocalDate taskDeadline;
 
-    public DeadlineAfterFinishingDateException(LocalDate projectFinishingDate, LocalDate taskDeadline) {
+    public StartDateAfterEndDateException(LocalDate projectFinishingDate, LocalDate taskDeadline) {
         super(String.format("Deadline %s is after finishing date %s.", taskDeadline, projectFinishingDate));
         this.projectFinishingDate = projectFinishingDate;
         this.taskDeadline = taskDeadline;

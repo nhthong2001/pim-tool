@@ -20,5 +20,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Queryds
     List<Project> findByNameContains(String keyword);
     Optional<Project> findByName(String name);
 
+    Optional<Project> findByProjectNumber(Integer projectNumber);
 
+
+    void deleteAllByIdIn(List<Long> listId);
 }

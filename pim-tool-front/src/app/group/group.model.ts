@@ -1,7 +1,7 @@
 export class Group {
   public id: number;
-  public leader_id: number;
-  public leader_visa: string;
+  public leaderId: number;
+  public leaderVisa: string;
 
 
   constructor(
