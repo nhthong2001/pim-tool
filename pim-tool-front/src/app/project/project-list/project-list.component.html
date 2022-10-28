@@ -4,8 +4,13 @@
     <hr>
     <form class="form-row mb-5" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
       <div class="col-md-4">
-        <input type="text" placeholder="{{'placeholder.searchInput' | translate}}" class="form-control col-md-11"
-               id="projectNameSearch" formControlName="projectInfo" name="projectInfo">
+        <input type="text"
+               placeholder="{{'placeholder.searchInput' | translate}}"
+               class="form-control col-md-11"
+               id="projectNameSearch"
+               formControlName="projectInfo"
+               name="projectInfo"
+               (keyup.enter)="onSubmit()">
       </div>
       <div class="col-md-2">
         <select type="text" class="form-control col-md-8" id="projectStatusSearch" formControlName="status"

@@ -10,8 +10,8 @@
     </a>
 
     <div>
-      <span><a (click)="switchLanguage('en')" class="link">EN</a></span> |
-      <span class="d-inline"><a (click)="switchLanguage('fr')" class="link">FR</a></span>
+      <span><a (click)="switchLanguage('en')" class="link" style="color: black" #en>EN</a></span> |
+      <span class="d-inline"><a (click)="switchLanguage('fr')" class="link" #fr>FR</a></span>
     </div>
     <div class="nav navbar-nav navbar-right">
       <li><a class="link">{{'header.help' | translate}}</a></li>

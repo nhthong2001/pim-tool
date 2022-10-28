@@ -26,7 +26,6 @@ export class ProjectFormComponent implements OnInit {
   validVisa: string[] = [];
   listInvalidVisa: string;
   id: number;
-  ProjectStatus: ProjectStatus;
   status: ProjectStatus[] = [ProjectStatus.NEW, ProjectStatus.PLA, ProjectStatus.INP, ProjectStatus.FIN];
   defaultStatus: ProjectStatus = ProjectStatus.NEW;
   groups: Group[] = [];
@@ -69,7 +68,6 @@ export class ProjectFormComponent implements OnInit {
       this.id = +params['id'];
       this.isEdited = params['id'] != null;
       this.initForm();
-
     })
   }
 
@@ -89,12 +87,11 @@ export class ProjectFormComponent implements OnInit {
           customer: this.project.customer,
           group: this.project.group,
           member: members,
-          status: this.project.status,
+          status: ProjectStatus[this.project.status],
           startDate: sd === 'Invalid date' ? '' : sd,
           endDate: ed === 'Invalid date' ? '' : ed,
           version: this.project.version
         })
-
         this.projectControls.projectNumber.disable();
       })
     }
@@ -103,12 +100,13 @@ export class ProjectFormComponent implements OnInit {
 
   forbiddenProjectNumber(control: FormControl) {
     if (control.value <= 0) {
-      return {forbidenNumber: true};
+      return {forbiddenNumber: true};
     }
     return null;
   }
 
   onSubmit() {
+
     if (!this.isValidData(this.projectForm)) {
       return;
     }
@@ -137,6 +135,8 @@ export class ProjectFormComponent implements OnInit {
   private isValidData(formData) {
     this.inValidVisa = [];
     let formValue = formData.value;
+    let isValidForm = true;
+
     formData.markAllAsTouched();
 
     if (formValue.projectNumber === '') {
@@ -147,17 +147,19 @@ export class ProjectFormComponent implements OnInit {
           this.isValidProjectNumber = check;
           if (!check) {
             formData.controls.projectNumber.setErrors({isNotValidNumber: true});
-            this.isAlertMandatoryError = true;
             this.isAlertProjectNumberError = true;
+            isValidForm = false;
           }
         });
       }
     }
-    if (formValue.customer === '') {
+    if (formValue.customer.trim() === '') {
       this.isAlertMandatoryError = true;
+      isValidForm = false;
     }
-    if (formValue.group === '') {
+    if (formValue.group.trim() === '') {
       this.isAlertMandatoryError = true;
+      isValidForm = false;
     }
 
     if (formValue.startDate === '') {
@@ -166,7 +168,8 @@ export class ProjectFormComponent implements OnInit {
       if (formValue.endDate.length !== '') {
         if (new Date(formValue.startDate) > new Date(formValue.endDate)) {
           this.isInValidDateEnd = true;
-          formData.controls.endDate.setErrors({'invalidEndDate': true})
+          formData.controls.endDate.setErrors({'invalidEndDate': true});
+          isValidForm = false;
         }
       }
     }
@@ -176,6 +179,7 @@ export class ProjectFormComponent implements OnInit {
         if (!this.validVisa.includes(member.toUpperCase()) && member != '') {
           if (!this.inValidVisa.includes(member)) {
             this.inValidVisa.push(member);
+            isValidForm = false;
           }
         }
       });
@@ -183,17 +187,16 @@ export class ProjectFormComponent implements OnInit {
       if (this.inValidVisa.length !== 0) {
         this.listInvalidVisa = this.inValidVisa.join(', ');
         formData.controls.member.setErrors({invalidVisa: true});
+        isValidForm = false;
       }
     }
-    if (formValue.projectNumber !== ''
-      && formValue.projectName !== ''
-      && formValue.customer !== ''
-      && formValue.group !== ''
-      && formValue.status !== ''
-      && formValue.startDate !== '') {
+    if (formValue.projectNumber !== '' && formValue.projectName.trim() !== '' && formValue.customer.trim() !== ''
+      && formValue.group.trim() !== '' && formValue.status !== '' && formValue.startDate !== '') {
       this.isAlertMandatoryError = false;
+    } else {
+      isValidForm = false;
     }
-    return formData.valid;
+    return isValidForm;
   }
 
   onCancel() {
@@ -209,7 +212,8 @@ export class ProjectFormComponent implements OnInit {
   onInputProjectNumber() {
     this.isAlertProjectNumberError = false;
   }
-  projectStatusEnumToKey(status: ProjectStatus){
+
+  projectStatusEnumToKey(status: ProjectStatus) {
     return ProjectStatus[status];
   }
 }

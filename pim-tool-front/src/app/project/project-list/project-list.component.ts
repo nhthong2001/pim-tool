@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Project} from "../project.model";
 import {ProjectService} from "../project.service";
 import {FormControl, FormGroup} from "@angular/forms";
-import {LocalService} from "../../shared/local.service";
+import {StoreService} from "../../shared/store.service";
 import {ProjectStatus} from "../project-status.enum";
 
 @Component({
@@ -26,29 +26,27 @@ export class ProjectListComponent implements OnInit {
   }
 
   constructor(private projectService: ProjectService,
-              private localStore: LocalService) {
+              private localStore: StoreService) {
   }
 
   ngOnInit(): void {
     this.initSearchForm();
-
-    if (this.searchForm.value.projectInfo !== '' || this.searchForm.value.status !== '') {
-      console.log(this.searchForm.value);
-      this.onSubmit();
-    } else {
-      this.getAllProject();
-    }
   }
 
   private initSearchForm() {
     this.searchForm = new FormGroup(this.searchControls);
+    if (this.localStore.searchInfo !== '' || this.localStore.searchStatus !== null) {
+      console.log(this.localStore.searchInfo);
+      console.log(this.localStore.searchStatus);
 
-    if (this.localStore.getData('searchData') !== null) {
-      console.log(this.localStore.getData('searchData').projectInfo);
-      this.searchForm.patchValue({
-        'projectInfo': this.localStore.getData('searchData').projectInfo || '',
-        'status': this.localStore.getData('searchData').projectStatus || ''
-      })
+      this.searchForm.setValue({
+        projectInfo: this.localStore.searchInfo,
+        status: this.localStore.searchStatus === null ? '' : this.localStore.searchStatus
+      });
+      this.onSubmit();
+    } else {
+      this.searchForm = new FormGroup(this.searchControls);
+      this.getAllProject();
     }
   }
 
@@ -56,6 +54,9 @@ export class ProjectListComponent implements OnInit {
     this.projectService.fetchProjects().subscribe(
       projects => {
         this.projectList = projects.map(p => Object.assign(new Project(), {...p, status: ProjectStatus[p.status]}));
+        if (this.projectList.length === 0) {
+          this.isNotFound = true;
+        }
       }
     );
   }
@@ -63,11 +64,8 @@ export class ProjectListComponent implements OnInit {
   onSubmit() {
     let data = this.searchForm.value;
     if (data.projectInfo !== '' || data.status !== '') {
-      //Todo: save search info to localstorage
-      console.log(data);
-      this.localStore.saveData("searchData", {projectInfo: data.projectInfo, projectStatus: ProjectStatus[data.status]});
-
-
+      let status: ProjectStatus = data.status === '' ? null: data.status;
+      this.localStore.saveData(data.projectInfo, status);
       this.projectService.searchProject(data.projectInfo, ProjectStatus[data.status]).subscribe(res => {
         if (res.length !== 0) {
           this.isNotFound = false;
@@ -77,17 +75,15 @@ export class ProjectListComponent implements OnInit {
         }
       });
     } else {
-      this.isNotFound = false;
-      this.localStore.clearData();
-      this.getAllProject();
+      this.onReset();
     }
   }
 
   onReset() {
-    this.localStore.clearData();
+    this.localStore.resetData();
     this.searchForm.setValue({
-      'projectInfo': '',
-      'status': ''
+      projectInfo: '',
+      status: ''
     });
     this.isNotFound = false;
     this.getAllProject();
@@ -129,7 +125,8 @@ export class ProjectListComponent implements OnInit {
       });
     }
   }
-  projectStatusEnumToKey(status: ProjectStatus){
+
+  projectStatusEnumToKey(status: ProjectStatus) {
     return ProjectStatus[status];
   }
 }

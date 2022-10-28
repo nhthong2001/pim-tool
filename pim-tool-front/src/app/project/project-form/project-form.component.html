@@ -11,8 +11,8 @@
         <hr>
       </div>
       <form (ngSubmit)="onSubmit()" [formGroup]="projectForm">
-        <ng-container *ngIf="isAlertMandatoryError">
-          <div class="alert alert-danger alert-dismissible fade show col-md-10" role="alert">
+        <ng-container >
+          <div class="alert alert-danger alert-dismissible fade show col-md-10" role="alert" *ngIf="isAlertMandatoryError">
             {{'form.mandatoryFields' | translate}}
             <button type="button" class="close" aria-label="Close" (click)="closeAlertError()">
               <span aria-hidden="true">&times;</span>

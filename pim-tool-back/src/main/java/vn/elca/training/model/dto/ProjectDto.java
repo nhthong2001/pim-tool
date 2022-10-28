@@ -4,6 +4,8 @@ import lombok.Builder;
 import vn.elca.training.model.ProjectStatus;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class ProjectDto {
     private String group;
 
     private List<String> member;
-    @NotEmpty(message = "Status must not be empty")
+    @NotNull(message = "Status must not be null")
     private ProjectStatus status;
 
     @NotEmpty(message = "Start Date must not be empty")
