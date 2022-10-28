@@ -3,6 +3,7 @@ package vn.elca.training.service;
 import vn.elca.training.model.ProjectStatus;
 import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.model.entity.Project;
+import vn.elca.training.model.exception.DeleteException;
 import vn.elca.training.model.exception.InvalidProjectInfoException;
 import vn.elca.training.model.exception.NotFoundException;
 import vn.elca.training.model.exception.StartDateAfterEndDateException;
@@ -36,7 +37,7 @@ public interface ProjectService {
 
     List<Project> searchProject(String keyword);
 
-    Long deleteProject(Long id);
+    Long deleteProject(Long id) throws NotFoundException, DeleteException;
 
     List<Long> deleteListProject(List<Long> listId);
 

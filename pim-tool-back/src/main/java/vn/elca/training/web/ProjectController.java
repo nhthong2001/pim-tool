@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.elca.training.model.ProjectStatus;
 import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.model.entity.Project;
+import vn.elca.training.model.exception.DeleteException;
 import vn.elca.training.model.exception.InvalidProjectInfoException;
 import vn.elca.training.model.exception.NotFoundException;
 import vn.elca.training.model.exception.StartDateAfterEndDateException;
@@ -87,7 +88,7 @@ public class ProjectController extends AbstractApplicationController {
     }
 
     @DeleteMapping("{id}")
-    public Long deleteProject(@PathVariable Long id) {
+    public Long deleteProject(@PathVariable Long id) throws DeleteException, NotFoundException {
         return projectService.deleteProject(id);
     }
 

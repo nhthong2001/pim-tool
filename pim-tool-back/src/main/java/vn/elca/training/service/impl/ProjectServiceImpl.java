@@ -8,6 +8,7 @@ import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.model.dto.SearchDataDto;
 import vn.elca.training.model.entity.Employee;
 import vn.elca.training.model.entity.Project;
+import vn.elca.training.model.exception.DeleteException;
 import vn.elca.training.model.exception.InvalidProjectInfoException;
 import vn.elca.training.model.exception.NotFoundException;
 import vn.elca.training.model.exception.StartDateAfterEndDateException;
@@ -139,13 +140,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Long deleteProject(Long id) {
+    public Long deleteProject(Long id) throws NotFoundException, DeleteException {
         Optional<Project> project = projectRepository.findById(id);
         if (project.isEmpty()) {
-            //throw new Exception("Can't find project for delete");
+            throw new NotFoundException("Can't find project for delete");
         } else {
             if (project.get().getStatus() != ProjectStatus.NEW) {
-                // throw exception
+                throw new DeleteException("Can't delete project which have status different from NEW");
             }
         }
         projectRepository.deleteById(id);
@@ -154,7 +155,15 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<Long> deleteListProject(List<Long> listId) {
-        listId.forEach(id -> projectRepository.deleteById(id));
+        listId.forEach(id -> {
+            try {
+                this.deleteProject(id);
+            } catch (NotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (DeleteException e) {
+                throw new RuntimeException(e);
+            }
+        });
         return listId;
     }
 

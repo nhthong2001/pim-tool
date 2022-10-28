@@ -6,10 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import vn.elca.training.model.exception.ApiException;
-import vn.elca.training.model.exception.InvalidProjectInfoException;
-import vn.elca.training.model.exception.StartDateAfterEndDateException;
-import vn.elca.training.model.exception.NotFoundException;
+import vn.elca.training.model.exception.*;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -55,6 +52,14 @@ public class ExceptionHandlerCustom {
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 ZonedDateTime.now(ZoneId.of("Z")));
         return new ResponseEntity<>(apiException, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @ExceptionHandler(value = {DeleteException.class})
+    public ResponseEntity<Object> handleDeleteException(DeleteException e) {
+        ApiException apiException = new ApiException(
+                e.getMessage(),
+                HttpStatus.FORBIDDEN,
+                ZonedDateTime.now(ZoneId.of("Z")));
+        return new ResponseEntity<>(apiException, HttpStatus.FORBIDDEN);
     }
 
 }
