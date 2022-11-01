@@ -149,22 +149,22 @@
         </div>
         <div class="mt-5 col-md-10 no-padding">
           <hr>
-        </div>
-        <div class="mt-5 d-flex justify-content-end">
-          <button class="btn mr-5" style="background: #B9B9B9" (click)="onCancel()" type="button">
-            {{'actions.cancel' | translate}}
-          </button>
-          <button
-            type="submit"
-            class="btn text-white"
-            style="background: #2F85FA">
-            <ng-container *ngIf="!isEdited">
-              {{'actions.createProject' | translate}}
-            </ng-container>
-            <ng-container *ngIf="isEdited">
-              {{'actions.editProject' | translate}}
-            </ng-container>
-          </button>
+          <div class="mt-5 d-flex justify-content-end">
+            <button class="btn mr-5" style="background: #B9B9B9" (click)="onCancel()" type="button">
+              {{'actions.cancel' | translate}}
+            </button>
+            <button
+              type="submit"
+              class="btn text-white"
+              style="background: #2F85FA">
+              <ng-container *ngIf="!isEdited">
+                {{'actions.createProject' | translate}}
+              </ng-container>
+              <ng-container *ngIf="isEdited">
+                {{'actions.editProject' | translate}}
+              </ng-container>
+            </button>
+          </div>
         </div>
       </form>
     </div>

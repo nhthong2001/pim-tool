@@ -1,12 +1,9 @@
 package vn.elca.training.service;
 
-import vn.elca.training.model.ProjectStatus;
 import vn.elca.training.model.dto.ProjectDto;
+import vn.elca.training.model.dto.SearchDataDto;
 import vn.elca.training.model.entity.Project;
-import vn.elca.training.model.exception.DeleteException;
-import vn.elca.training.model.exception.InvalidProjectInfoException;
-import vn.elca.training.model.exception.NotFoundException;
-import vn.elca.training.model.exception.StartDateAfterEndDateException;
+import vn.elca.training.model.exception.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,17 +12,9 @@ import java.util.Optional;
  * @author vlp
  */
 public interface ProjectService {
-    List<Project> findAll();
+    Optional<Project> findById(Long id) throws ProjectNotFoundException;
 
-    Optional<Project> findById(Long id) throws NotFoundException;
-
-    List<Project> findByKeyword(String keyword);
-
-    Optional<Project> findByName(String name);
-
-    long count();
-
-    Project saveProject(ProjectDto projectDto) throws StartDateAfterEndDateException, NotFoundException, InvalidProjectInfoException;
+    Project saveProject(ProjectDto projectDto) throws StartDateAfterEndDateException, ProjectNotFoundException, InvalidProjectMemberException, InvalidGroupException, InvalidProjectNumberException;
 
     List<String> getListEmployee(Long id);
 
@@ -33,13 +22,13 @@ public interface ProjectService {
 
     Boolean isValidProjectNumber(Integer projectNumber);
 
-    List<Project> searchProject(String keyword, ProjectStatus status);
+    List<Project> searchProject(SearchDataDto searchDataDto);
 
     List<Project> searchProject(String keyword);
 
-    Long deleteProject(Long id) throws NotFoundException, DeleteException;
+    Long deleteProject(Long id) throws ProjectNotFoundException, DeleteProjectException;
 
     List<Long> deleteListProject(List<Long> listId);
 
-    Project updateProject(ProjectDto projectDto) throws StartDateAfterEndDateException, InvalidProjectInfoException;
+    Project updateProject(ProjectDto projectDto) throws StartDateAfterEndDateException, InvalidProjectMemberException, InvalidProjectNumberException, ProjectNotFoundException, InvalidGroupException;
 }

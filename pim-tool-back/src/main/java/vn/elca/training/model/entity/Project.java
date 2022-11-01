@@ -2,6 +2,7 @@ package vn.elca.training.model.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import vn.elca.training.model.ProjectStatus;
 
 import javax.persistence.*;
@@ -14,17 +15,14 @@ import java.util.Set;
  * @author vlp
  */
 @Entity
-@Table(name = "project")
-public class Project {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Project extends AbstractEntity{
+
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
-    @Column(name = "project_number", unique = true)
+    @Column(unique = true, nullable = false)
     private Integer projectNumber;
 
     @Column(nullable = false)
@@ -34,20 +32,18 @@ public class Project {
     private String customer;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 3)
+    @Column(length = 3, nullable = false)
     private ProjectStatus status;
 
-    @Column(name = "start_date")
+    @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate startDate;
 
-    @Column(name = "end_date")
+    @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate endDate;
 
-    @Column(name = "version")
-    @Version
-    private Long version;
+
 
     @ManyToMany
     @JoinTable(name = "project_employee",
@@ -55,7 +51,6 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "employee_id")
     )
     private Set<Employee> employees = new HashSet<>();
-
 
 
     public Project(String name) {
@@ -73,7 +68,8 @@ public class Project {
         this.endDate = finishingDate;
     }
 
-    public Project() { }
+    public Project() {
+    }
 
     public Long getId() {
         return id;
@@ -139,13 +135,7 @@ public class Project {
         this.endDate = endDate;
     }
 
-    public Long getVersion() {
-        return version;
-    }
 
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     public Set<Employee> getEmployees() {
         return employees;
@@ -157,10 +147,17 @@ public class Project {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
         Project project = (Project) o;
-        return Objects.equals(id, project.id) && Objects.equals(name, project.name);
+        if (this == o) {
+            if (this.id == project.getId() && this.name == project.getName()) {
+                return true;
+            }
+        }
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+
+        return new EqualsBuilder().append(id, project.id).append(group, project.group).isEquals();
     }
 
     @Override

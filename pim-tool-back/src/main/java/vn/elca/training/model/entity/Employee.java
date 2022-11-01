@@ -9,26 +9,22 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "employee")
-public class Employee {
+public class Employee extends AbstractEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "visa", nullable = false)
+    @Column(nullable = false)
     @Length(max = 3)
     private String visa;
 
-    @Column(name = "first_name")
+    @Column
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column
     private String lastName;
 
-    @Column(name = "birth_date")
+    @Column
     private LocalDate birthDate;
-
-    @Column(name = "version")
-    private Long version;
 
     @ManyToMany(mappedBy = "employees")
     private Set<Project> projects = new HashSet<>();
@@ -82,14 +78,6 @@ public class Employee {
 
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     public Set<Project> getProjects() {

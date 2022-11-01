@@ -1,6 +1,6 @@
 <div class="row mt-4 ml-4">
   <div class="col-lg-12">
-    <h2>Projects List</h2>
+    <h2>{{'projectList' | translate}}</h2>
     <hr>
     <form class="form-row mb-5" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
       <div class="col-md-4">
@@ -48,7 +48,7 @@
           <tr>
             <th scope="row">
               <div class="d-flex justify-content-center">
-                <input type="checkbox" class="mt-1" style="width: 15px; height: 15px"
+                <input type="checkbox" class="mt-1" style="width: 15px; height: 15px" [checked]="isChecked(project.id)"
                        [disabled]="isDisabled(project.status)" (click)="onChecked($event, project.id)">
               </div>
             </th>
@@ -59,7 +59,7 @@
             <td>{{projectStatusEnumToKey(project.status) | translate}}</td>
             <td>{{project.customer}}</td>
             <td>
-              <div class="d-flex justify-content-center">{{project.startDate}}</div>
+              <div class="d-flex justify-content-center">{{project.startDate | date:'dd.MM.yyyy'}}</div>
             </td>
             <td>
               <div *ngIf="project.status === ProjectStatus.NEW" class="d-flex justify-content-center">
@@ -68,13 +68,13 @@
             </td>
           </tr>
         </ng-container>
-        <tr id="info-selected" id="tr-end" *ngIf="listCheckedProjectId.length > 1">
+        <tr id="info-selected" id="tr-end" *ngIf="listCheckedProjectId.length > 0">
           <td class="table-info" colspan="7">
             <div class="d-flex justify-content-sm-between">
               <span class="text-primary">{{this.listCheckedProjectId.length}} {{'itemSelected' | translate}}</span>
               <span class="text-danger">
-                  <a style="color: red; cursor: pointer" (click)="onDeleteListProject()">{{'deleteSelectedItem(s)' | translate}} <i
-                    class="bi bi-trash3-fill"></i></a>
+                  <a style="color: red; cursor: pointer" (click)="onDeleteListProject()">{{'deleteSelectedItem(s)' | translate}}
+                    <i class="bi bi-trash3-fill"></i></a>
                 </span>
             </div>
           </td>

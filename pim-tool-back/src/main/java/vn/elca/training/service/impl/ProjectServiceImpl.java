@@ -3,17 +3,14 @@ package vn.elca.training.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.elca.training.model.ProjectStatus;
 import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.model.dto.SearchDataDto;
 import vn.elca.training.model.entity.Employee;
 import vn.elca.training.model.entity.Project;
-import vn.elca.training.model.exception.DeleteException;
-import vn.elca.training.model.exception.InvalidProjectInfoException;
-import vn.elca.training.model.exception.NotFoundException;
-import vn.elca.training.model.exception.StartDateAfterEndDateException;
+import vn.elca.training.model.exception.*;
 import vn.elca.training.repository.EmployeeRepository;
-import vn.elca.training.repository.GroupRepository;
 import vn.elca.training.repository.ProjectRepository;
 import vn.elca.training.service.ProjectService;
 import vn.elca.training.util.ApplicationMapper;
@@ -28,7 +25,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Profile("!dummy | dev")
-
+@Transactional
 public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
@@ -38,45 +35,23 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Autowired
-    private GroupRepository groupRepository;
 
     @Autowired
     private ProjectValidator projectValidator;
 
     @Override
-    public List<Project> findAll() {
-        return projectRepository.findAll();
-    }
-
-    @Override
-    public Optional<Project> findById(Long id) throws NotFoundException {
+    public Optional<Project> findById(Long id) throws ProjectNotFoundException {
         Optional<Project> project = projectRepository.findById(id);
         if (project.isEmpty()) {
-            throw new NotFoundException("Project with id = " + id + "is not exist!");
+            throw new ProjectNotFoundException("Project is not exist!", id);
         }
         return project;
     }
 
     @Override
-    public List<Project> findByKeyword(String keyword) {
-        return projectRepository.findByNameContainsIgnoreCase(keyword);
-    }
-
-    @Override
-    public Optional<Project> findByName(String name) {
-        return projectRepository.findByName(name);
-    }
-
-    @Override
-    public long count() {
-        return projectRepository.count();
-    }
-
-    @Override
-    public Project saveProject(ProjectDto projectDto) throws StartDateAfterEndDateException, InvalidProjectInfoException {
+    public Project saveProject(ProjectDto projectDto) throws StartDateAfterEndDateException, InvalidProjectMemberException, InvalidGroupException, InvalidProjectNumberException {
         if (!this.isValidProjectNumber(projectDto.getProjectNumber())) {
-            throw new InvalidProjectInfoException("Project Number is not valid!");
+            throw new InvalidProjectNumberException("Project Number is not valid.", projectDto.getProjectNumber());
         }
         projectValidator.validate(projectDto);
 
@@ -87,14 +62,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project updateProject(ProjectDto projectDto) throws StartDateAfterEndDateException, InvalidProjectInfoException {
+    public Project updateProject(ProjectDto projectDto) throws StartDateAfterEndDateException, InvalidProjectMemberException, InvalidProjectNumberException, ProjectNotFoundException, InvalidGroupException {
         try {
             Optional<Project> project = this.findById(projectDto.getId());
             if (project.get().getProjectNumber().intValue() != projectDto.getProjectNumber().intValue()) {
-                throw new InvalidProjectInfoException("Project Number is not be modified!");
+                throw new InvalidProjectNumberException("Project Number can not modified.", projectDto.getProjectNumber());
             }
-        } catch (NotFoundException e) {
-            throw new InvalidProjectInfoException("Project Id is not valid!");
+        } catch (ProjectNotFoundException e) {
+            throw new ProjectNotFoundException("Can't find project for update!", e.getId());
         }
         projectValidator.validate(projectDto);
         Project project = mapper.projectDtoToProject(projectDto);
@@ -126,27 +101,23 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> searchProject(String keyword, ProjectStatus status) {
-        SearchDataDto searchDataDto = new SearchDataDto();
-        searchDataDto.setKeyword(keyword);
-        searchDataDto.setStatus(status);
-
+    public List<Project> searchProject(SearchDataDto searchDataDto) {
         return projectRepository.findAllProjectByKeywordAndStatus(searchDataDto);
     }
 
     @Override
     public List<Project> searchProject(String keyword) {
-          return projectRepository.findByNameContainsIgnoreCase(keyword);
+        return projectRepository.findByNameContainsIgnoreCaseOrderByProjectNumberAsc(keyword);
     }
 
     @Override
-    public Long deleteProject(Long id) throws NotFoundException, DeleteException {
+    public Long deleteProject(Long id) throws ProjectNotFoundException, DeleteProjectException {
         Optional<Project> project = projectRepository.findById(id);
         if (project.isEmpty()) {
-            throw new NotFoundException("Can't find project for delete");
+            throw new ProjectNotFoundException("Can't find project for delete!", id);
         } else {
             if (project.get().getStatus() != ProjectStatus.NEW) {
-                throw new DeleteException("Can't delete project which have status different from NEW");
+                throw new DeleteProjectException(id);
             }
         }
         projectRepository.deleteById(id);
@@ -154,16 +125,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Long> deleteListProject(List<Long> listId) {
-        listId.forEach(id -> {
-            try {
-                this.deleteProject(id);
-            } catch (NotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (DeleteException e) {
-                throw new RuntimeException(e);
-            }
-        });
+    public List<Long> deleteListProject(List<Long> listId)  {
+        // Throw EmptyResultDataAccessException when have project id not found in db
+        List<Project> projects = projectRepository.findAllByIdIn(listId);
+
+
+
+        listId.forEach(id -> projectRepository.deleteById(id));
         return listId;
     }
 

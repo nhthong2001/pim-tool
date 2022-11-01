@@ -1,18 +1,15 @@
 package vn.elca.training.model.exception;
-
 import org.springframework.http.HttpStatus;
 
 import java.time.ZonedDateTime;
 
-public class ApiException {
+public class ApiExceptionDto {
     private final String message;
     private final HttpStatus httpStatus;
-    private final ZonedDateTime zonedDateTime;
 
-    public ApiException(String message, HttpStatus httpStatus, ZonedDateTime zonedDateTime) {
+    public ApiExceptionDto(String message, HttpStatus httpStatus) {
         this.message = message;
         this.httpStatus = httpStatus;
-        this.zonedDateTime = zonedDateTime;
     }
 
     public String getMessage() {
@@ -21,9 +18,5 @@ public class ApiException {
 
     public HttpStatus getHttpStatus() {
         return httpStatus;
-    }
-
-    public ZonedDateTime getZonedDateTime() {
-        return zonedDateTime;
     }
 }

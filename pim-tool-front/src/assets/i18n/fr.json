@@ -1,7 +1,5 @@
 {
-
-  "or": "ou",
-  "please": "S'il vous plaît",
+  "projectList": "Liste de projets",
 
   "searchEmptyResults": "Aucun résultat trouvé",
   "itemSelected" : "élément(s) sélectionné(s)",
@@ -63,14 +61,17 @@
   },
 
   "error": {
-    "message": "(FR)Unexpected error occurred",
-    "please": "(FR)Please",
-    "contact": "(FR)contact your administrator",
-    "or": "(FR)or",
-    "back": "(FR)back to search project"
+    "message": "Une erreur inattendue s'est produite",
+    "please": "S'il vous plaît",
+    "contact": "contactez votre administrateur",
+    "or": "ou",
+    "back": "retour au projet de recherche"
   },
   "placeholder": {
     "searchInput": "Numéro de projet, nom, nom du client",
     "status": "L'état du projet"
-  }
+  },
+  "confirm_cancel": "Êtes-vous sûr d'annuler?",
+  "confirm_delete_item": "Êtes-vous sûr de vouloir supprimer ce projet?",
+  "confirm_delete_list": "Voulez-vous vraiment supprimer tous les projets sélectionnés?"
 }

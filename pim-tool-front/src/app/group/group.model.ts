@@ -4,10 +4,6 @@ export class Group {
   public leaderVisa: string;
 
 
-  constructor(
-    id: number,
-    leader_id: number,
-    leader_visa: string
-  ) {
+  constructor() {
   }
 }

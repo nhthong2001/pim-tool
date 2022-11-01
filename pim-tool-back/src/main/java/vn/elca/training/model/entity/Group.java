@@ -6,17 +6,11 @@ import java.util.Set;
 
 @Entity(name = "groups")
 @Table(name = "groups")
-public class Group {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Group extends AbstractEntity{
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_leader_id")
     private Employee groupLeader;
 
-    @Column(name = "version")
-    private Long version;
     @OneToMany(mappedBy = "group")
     private Set<Project> projects = new HashSet<>();
 

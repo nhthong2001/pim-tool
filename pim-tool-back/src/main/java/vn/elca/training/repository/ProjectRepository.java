@@ -16,10 +16,11 @@ import java.util.Optional;
  */
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long>, QuerydslPredicateExecutor<Project>, ProjectRepositoryCustom {
-    List<Project> findByNameContainsIgnoreCase(String keyword);
-    Optional<Project> findByName(String name);
+    List<Project> findByNameContainsIgnoreCaseOrderByProjectNumberAsc(String keyword);
 
     Optional<Project> findByProjectNumber(Integer projectNumber);
+
+    List<Project> findAllByIdIn(List<Long> ids);
 
 
 }

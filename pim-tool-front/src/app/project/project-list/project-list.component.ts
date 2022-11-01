@@ -4,6 +4,7 @@ import {ProjectService} from "../project.service";
 import {FormControl, FormGroup} from "@angular/forms";
 import {StoreService} from "../../shared/store.service";
 import {ProjectStatus} from "../project-status.enum";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-project-list',
@@ -17,7 +18,6 @@ export class ProjectListComponent implements OnInit {
   searchForm: FormGroup;
   isNotFound = false;
   listCheckedProjectId: number[] = [];
-  isDeletedListItem = false;
   ProjectStatus = ProjectStatus;
 
   searchControls = {
@@ -26,7 +26,8 @@ export class ProjectListComponent implements OnInit {
   }
 
   constructor(private projectService: ProjectService,
-              private localStore: StoreService) {
+              private localStore: StoreService,
+              private translate: TranslateService) {
   }
 
   ngOnInit(): void {
@@ -36,9 +37,6 @@ export class ProjectListComponent implements OnInit {
   private initSearchForm() {
     this.searchForm = new FormGroup(this.searchControls);
     if (this.localStore.searchInfo !== '' || this.localStore.searchStatus !== null) {
-      console.log(this.localStore.searchInfo);
-      console.log(this.localStore.searchStatus);
-
       this.searchForm.setValue({
         projectInfo: this.localStore.searchInfo,
         status: this.localStore.searchStatus === null ? '' : this.localStore.searchStatus
@@ -57,6 +55,8 @@ export class ProjectListComponent implements OnInit {
         if (this.projectList.length === 0) {
           this.isNotFound = true;
         }
+      }, error => {
+        this.isNotFound = true;
       }
     );
   }
@@ -64,7 +64,7 @@ export class ProjectListComponent implements OnInit {
   onSubmit() {
     let data = this.searchForm.value;
     if (data.projectInfo !== '' || data.status !== '') {
-      let status: ProjectStatus = data.status === '' ? null: data.status;
+      let status: ProjectStatus = data.status === '' ? null : data.status;
       this.localStore.saveData(data.projectInfo, status);
       this.projectService.searchProject(data.projectInfo, ProjectStatus[data.status]).subscribe(res => {
         if (res.length !== 0) {
@@ -90,7 +90,9 @@ export class ProjectListComponent implements OnInit {
   }
 
   onDelete(projectId: number) {
-    if (confirm("Are you sure to delete this project?")) {
+    if (confirm(this.translate.instant("confirm_delete_item"))) {
+      this.listCheckedProjectId.splice(this.listCheckedProjectId.indexOf(projectId), 1);
+      console.log(this.listCheckedProjectId);
       this.projectService.deleteProject(projectId).subscribe(res => {
         console.log(res);
         this.getAllProject();
@@ -108,16 +110,10 @@ export class ProjectListComponent implements OnInit {
     } else {
       this.listCheckedProjectId = this.listCheckedProjectId.filter(projectId => projectId !== id);
     }
-
-    if (this.listCheckedProjectId.length > 1) {
-      this.isDeletedListItem = true;
-    } else {
-      this.isDeletedListItem = false;
-    }
   }
 
   onDeleteListProject() {
-    if (confirm("Are you sure to delete all selected projects?")) {
+    if (confirm(this.translate.instant("confirm_delete_list"))) {
       this.projectService.deleteListProject(this.listCheckedProjectId).subscribe(res => {
         console.log(res);
         this.listCheckedProjectId = [];
@@ -128,5 +124,12 @@ export class ProjectListComponent implements OnInit {
 
   projectStatusEnumToKey(status: ProjectStatus) {
     return ProjectStatus[status];
+  }
+
+  isChecked(projectId: number) {
+    if (this.listCheckedProjectId.indexOf(projectId) !== -1) {
+      return true;
+    }
+    return false;
   }
 }

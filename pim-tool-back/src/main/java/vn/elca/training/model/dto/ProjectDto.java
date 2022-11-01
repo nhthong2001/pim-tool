@@ -5,8 +5,8 @@ import vn.elca.training.model.ProjectStatus;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -16,8 +16,6 @@ import java.util.List;
 @Builder
 public class ProjectDto {
     private Long id;
-
-   
     @PositiveOrZero(message = "Project Number must be a positive number")
     private Integer projectNumber;
 
@@ -33,10 +31,10 @@ public class ProjectDto {
     @NotNull(message = "Status must not be null")
     private ProjectStatus status;
 
-    @NotEmpty(message = "Start Date must not be empty")
-    private String startDate;
+    @NotNull(message = "Start Date must not be null")
+    private LocalDate startDate;
 
-    private String endDate;
+    private LocalDate endDate;
 
     private  Long version;
 
@@ -96,19 +94,19 @@ public class ProjectDto {
         this.status = status;
     }
 
-    public String getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 

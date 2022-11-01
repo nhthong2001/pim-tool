@@ -9,6 +9,11 @@ public class SearchDataDto {
     public SearchDataDto() {
     }
 
+    public SearchDataDto(String keyword, ProjectStatus status) {
+        this.keyword = keyword;
+        this.status = status;
+    }
+
     public String getKeyword() {
         return keyword;
     }

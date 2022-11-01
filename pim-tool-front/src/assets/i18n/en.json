@@ -1,7 +1,5 @@
 {
-
-  "or": "or",
-  "please": "Please",
+  "projectList": "Project List",
 
   "searchEmptyResults": "No results found",
   "itemSelected" : "item(s) selected",
@@ -73,5 +71,8 @@
   "placeholder": {
     "searchInput": "Project number, name, customer name",
     "status": "Project Status"
-  }
+  },
+  "confirm_cancel": "Are you sure cancel?",
+  "confirm_delete_item": "Are you sure to delete this project?",
+  "confirm_delete_list": "Are you sure to delete all selected projects?"
 }

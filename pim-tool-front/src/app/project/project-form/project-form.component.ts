@@ -9,6 +9,7 @@ import {Project} from "../project.model";
 import {Group} from "../../group/group.model";
 import {EmployeeService} from "../../employee/employee.service";
 import {ProjectStatus} from "../project-status.enum";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-project-form',
@@ -47,7 +48,8 @@ export class ProjectFormComponent implements OnInit {
               private groupService: GroupService,
               private employeeService: EmployeeService,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private translate: TranslateService) {
     this.project = new Project();
   }
 
@@ -105,6 +107,10 @@ export class ProjectFormComponent implements OnInit {
     return null;
   }
 
+  private homeLink = '/project/project-list';
+
+  private errorLink = '/error';
+
   onSubmit() {
 
     if (!this.isValidData(this.projectForm)) {
@@ -119,15 +125,15 @@ export class ProjectFormComponent implements OnInit {
 
     if (this.isEdited) {
       this.projectService.update(data).subscribe(res => {
-        this.router.navigate(['/project/project-list'], {relativeTo: this.route});
+        this.router.navigate([this.homeLink], {relativeTo: this.route});
       }, error => {
         alert(error.error.message);
       })
     } else {
       this.projectService.save(data).subscribe(res => {
-        this.router.navigate(['/project/project-list'], {relativeTo: this.route});
+        this.router.navigate([this.homeLink], {relativeTo: this.route});
       }, error => {
-        // Display error on interface
+        this.router.navigate([this.errorLink], {relativeTo: this.route});
       })
     }
   }
@@ -141,6 +147,7 @@ export class ProjectFormComponent implements OnInit {
 
     if (formValue.projectNumber === '') {
       this.isAlertMandatoryError = true;
+      isValidForm = false;
     } else {
       if (!this.isEdited) {
         this.projectService.isValidProjectNumber(formValue.projectNumber).subscribe(check => {
@@ -177,10 +184,10 @@ export class ProjectFormComponent implements OnInit {
     if (formValue.member.trim() !== '') {
       formValue.member.split(',').map(member => member.trim()).forEach(member => {
         if (!this.validVisa.includes(member.toUpperCase()) && member != '') {
-          if (!this.inValidVisa.includes(member)) {
+          // if (!this.inValidVisa.includes(member)) {
             this.inValidVisa.push(member);
             isValidForm = false;
-          }
+          // }
         }
       });
 
@@ -200,7 +207,7 @@ export class ProjectFormComponent implements OnInit {
   }
 
   onCancel() {
-    if (confirm("Are you sure cancel?")) {
+    if (confirm(this.translate.instant("confirm_cancel"))) {
       this.router.navigate(['/project/project-list'], {relativeTo: this.route})
     }
   }
